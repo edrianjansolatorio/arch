@@ -24,7 +24,6 @@ CLEAR_SCREEN=true
 DISPLAY_INFO=true
 PAUSE=true
 
-
 ```
 
 ### DEBUG VIEW
@@ -99,7 +98,6 @@ timedatectl status
 umount -A --recursive /mnt
 sgdisk -Z ${DISK}
 sgdisk -a 2048 -o ${DISK}
-
 sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' ${DISK} # EFI /dev/nvme0n1p1
 sgdisk -n 2::+4g --typecode=2:8200 --change-name=2:'SWAP' ${DISK} # SWAP /dev/nvme0n1p2
 sgdisk -n 3::-0 --typecode=3:8300 --change-name=3:'ROOT' ${DISK} # FILE SYSTEM /dev/nvme0n1p3
