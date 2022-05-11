@@ -24,7 +24,7 @@ mkfs.fat -F32 ${NEW_DISK}1
 mkswap ${NEW_DISK}2
 swapon ${NEW_DISK}2
 mkfs.ext4 ${NEW_DISK}3
-mount ${NEW_DISK}3 /mnt
+echo "Y" | mount ${NEW_DISK}3 /mnt
 
 pacstrap -i /mnt --noconfirm base base-devel linux linux-firmware archlinux-keyring git
 pacstrap -i /mnt --noconfirm networkmanager dhcpcd dhclient netctl dialog
