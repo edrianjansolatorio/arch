@@ -11,14 +11,14 @@ locale-gen
 hwclock --systohc --utc
 
 passwd << EOF
-$ROOT_PASSWD
-$ROOT_PASSWD
+$PASSWORD
+$PASSWORD
 EOF
 
 useradd -m $USER_NAME
 passwd scrubs << EOF
-$USER_PASSWD
-$USER_PASSWD
+$PASSWORD
+$PASSWORD
 EOF
 
 whereis sudo
