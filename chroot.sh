@@ -17,7 +17,7 @@ $PASSWORD
 $PASSWORD
 EOF
 
-useradd -m $USER_NAME
+useradd -m $USERNAME
 passwd scrubs << EOF
 $PASSWORD
 $PASSWORD
