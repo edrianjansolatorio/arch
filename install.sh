@@ -23,24 +23,25 @@ NEW_DISK=${DISK}${DISK_PREFIX}
 mkfs.fat -F32 ${NEW_DISK}1
 mkswap ${NEW_DISK}2
 swapon ${NEW_DISK}2
-mkfs.ext4 ${NEW_DISK}3
-echo "Y" | mount ${NEW_DISK}3 /mnt
+echo "Y" | mkfs.ext4 ${NEW_DISK}3
+mount ${NEW_DISK}3 /mnt
 
 pacstrap -i /mnt --noconfirm base base-devel linux linux-firmware archlinux-keyring git
-pacstrap -i /mnt --noconfirm networkmanager dhcpcd dhclient netctl dialog
+pacstrap -i /mnt --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
 pacstrap -i /mnt --noconfirm grub efibootmgr
 
 # ----------------- KDE ------------------ #
 
-if [ "$DESKTOP" === "KDE" ]; then
-    pacstrap -i /mnt --noconfirm xorg plasma plasma-wayland-session
-    pacstrap -i /mnt sddm
+if [ "$DESKTOP" == "KDE" ]; then
+    echo "desktop"
+    # pacstrap -i /mnt --noconfirm xorg plasma plasma-wayland-session sddm
 fi
 
 # ---------------- GPU ------------------- #
 
-if [ "$GPU_TYPE" === "NVIDIA" ]; then
-    pacstrap -i --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+if [ "$GPU_TYPE" == "NVIDIA" ]; then
+    echo "gpu"
+    # pacstrap -i --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
 fi
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -61,3 +62,5 @@ cp ./chroot.sh /mnt
 cp ./settings.conf /mnt
 
 arch-chroot /mnt /chroot.sh
+
+# umount -R /mnt
