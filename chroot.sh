@@ -7,7 +7,10 @@ source ./settings.conf
 systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable iwd.service
-# systemctl enable sddm.service
+
+if [ "$DESKTOP" == "KDE" ]; then
+    systemctl enable sddm.service
+fi
 
 locale-gen
 hwclock --systohc --utc
@@ -29,6 +32,10 @@ groups $USER_NAME
 
 mkdir /boot/efi
 mount ${DISK}1 /boot/efi
+
+# ---------------- DEBUG AREA ------------------ #
+./apps.sh
+# ---------------- DEBUG AREA ------------------ #
 
 if [ "$BOOT_TYPE" = "EFI" ]; then
     grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi

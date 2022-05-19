@@ -33,15 +33,13 @@ pacstrap -i /mnt --noconfirm grub efibootmgr
 # ----------------- KDE ------------------ #
 
 if [ "$DESKTOP" == "KDE" ]; then
-    echo "desktop"
-    # pacstrap -i /mnt --noconfirm xorg plasma plasma-wayland-session sddm
+    pacstrap -i /mnt --noconfirm xorg plasma plasma-wayland-session sddm
 fi
 
 # ---------------- GPU ------------------- #
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
-    echo "gpu"
-    # pacstrap -i --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+    pacstrap -i --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
 fi
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -55,10 +53,10 @@ echo "::1   localhost" >> /mnt/etc/hosts
 echo "127.0.0.1 $HOST_NAME.localdomain  $HOST_NAME" >> /mnt/etc/hosts
 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
-echo "$USER_NAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
-
+echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
 
 cp ./chroot.sh /mnt
+cp ./apps.sh /mnt
 cp ./settings.conf /mnt
 
 arch-chroot /mnt /chroot.sh
