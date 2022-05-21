@@ -35,8 +35,8 @@ $PASSWORD
 EOF
 
 whereis sudo
-usermod -aG wheel,audio,video,optical,storage $USER_NAME
-groups $USER_NAME
+usermod -aG wheel,audio,video,optical,storage $USERNAME
+groups $USERNAME
 
 # ---------------- DEBUG AREA ------------------ #
 # ./apps.sh
