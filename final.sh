@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! '$(ls ./pikaur)' ]; then
+if [[ ! -d './pikaur' ]]; then
 git clone https://aur.archlinux.org/pikaur.git
 cd ./pikaur
 makepkg -si <<EOF

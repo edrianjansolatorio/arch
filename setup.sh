@@ -1,3 +1,10 @@
+#!/bin/bash
+
+debug () {
+read -p "debugging"
+$1
+read -p "debugging"
+}
 
 reset () {
 echo -e "
@@ -54,7 +61,7 @@ fi
 
 # [BEGIN]-GET BOOT_TYPE #
 
-if [ "$(ls /sys/firmware/efi/efivars)" ]; then
+if [[ -d "/sys/firmware/efi" ]]; then
     boot=EFI
     update_settings "BOOT_TYPE" "$boot"
 else
