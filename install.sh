@@ -68,11 +68,6 @@ fi
 lsblk
 fdisk -l
 
-# ---------- MODIFY ------------- #
-sudo sed -i "s/#\[multilib]/[multilib]/" /etc/pacman.conf
-sudo sed -i "$!N;s/\(\[multilib]\n\)#\(Include\)/\1\2/;P;D" /etc/pacman.conf
-# ---------- MODIFY ------------- #
-
 # -- debugging -- #
 
 pacstrap -i /mnt --noconfirm base base-devel linux linux-firmware archlinux-keyring git
@@ -110,6 +105,12 @@ echo "127.0.0.1 $HOST_NAME.localdomain  $HOST_NAME" >> /mnt/etc/hosts
 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
 echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
+
+# ---------- MODIFY ------------- #
+sed -i "s/#\[multilib]/[multilib]/" /mnt/etc/pacman.conf
+sed -i "$!N;s/\(\[multilib]\n\)#\(Include\)/\1\2/;P;D" /mnt/etc/pacman.conf
+debug "cat /mnt/etc/pacman.conf"
+# ---------- MODIFY ------------- #
 
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt
