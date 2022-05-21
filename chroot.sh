@@ -44,7 +44,7 @@ groups $USERNAME
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
     mkdir /boot/efi
-    mount ${DISK}1 /boot/efi
+    mount ${DISK}${DISK_PREFIX}1 /boot/efi
     grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
     grub-mkconfig -o /boot/grub/grub.cfg
     mkdir /boot/efi/EFI/BOOT
