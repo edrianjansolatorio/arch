@@ -1,7 +1,6 @@
 #!/bin/bash
 
 debug () {
-read -p "debugging"
 $1
 read -p "debugging"
 }

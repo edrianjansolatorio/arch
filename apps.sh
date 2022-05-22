@@ -4,8 +4,10 @@ source ./settings.conf
 
 # --- root installation -------- #
 
-pacman -S --noconfirm bzip2 p7zip unrar
-pacman -S --noconfirm git
+pacman -S --noconfirm --needed bzip2 p7zip unrar
+pacman -S --noconfirm --needed git
+pacman -S --noconfirm --needed firefox
+pacman -S --noconfirm --needed gimp
 
 if [ "$DESKTOP" == "KDE" ]; then
     # important apps
@@ -20,15 +22,3 @@ if [ "$DESKTOP" == "KDE" ]; then
     # fix sound and wifi applet
     pacman -S --noconfirm plasma-pa plasma-nm
 fi
-
-pacman -S --noconfirm firefox
-
-pacman -S --noconfirm gimp
-
-# ---------- RUN SERVICE ------------ #
-
-# bluetooth
-systemctl enable bluetooth
-
-# snapcraft service
-# systemctl enable --now snapd.socket

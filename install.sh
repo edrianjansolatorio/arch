@@ -1,7 +1,6 @@
 #!/bin/bash
 
 debug () {
-clear
 $1
 read -p "debugging"
 }
@@ -14,11 +13,7 @@ timedatectl set-ntp true
 timedatectl status
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-
-# -- debugging -- #
-
-# ORIGINAL: reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
+reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
 
@@ -70,27 +65,28 @@ fdisk -l
 
 # -- debugging -- #
 
-pacstrap -i /mnt --noconfirm base base-devel linux linux-firmware archlinux-keyring git
-pacstrap -i /mnt --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
+pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring git
+pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
 
-# -- debugging -- #
-pacstrap -i /mnt --noconfirm grub
+pacstrap -i /mnt --needed --noconfirm grub
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
-pacstrap -i /mnt --noconfirm efibootmgr
+pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
 
 # ----------------- KDE ------------------ #
 
 if [ "$DESKTOP" == "KDE" ]; then
-pacstrap -i /mnt --noconfirm xorg plasma plasma-wayland-session sddm
+pacstrap -i /mnt --needed --noconfirm xorg plasma plasma-wayland-session sddm
 fi
 
 # ---------------- GPU ------------------- #
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
-pacstrap -i --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
 fi
+# ---------------- GPU ------------------- #
+
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
@@ -106,11 +102,8 @@ echo "127.0.0.1 $HOST_NAME.localdomain  $HOST_NAME" >> /mnt/etc/hosts
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
 echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
 
-# ---------- MODIFY ------------- #
 sed -i "s/#\[multilib]/[multilib]/" /mnt/etc/pacman.conf
 sed -i "$!N;s/\(\[multilib]\n\)#\(Include\)/\1\2/;P;D" /mnt/etc/pacman.conf
-debug "cat /mnt/etc/pacman.conf"
-# ---------- MODIFY ------------- #
 
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt

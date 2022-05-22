@@ -1,0 +1,7 @@
+visual-studio-code-bin
+skypeforlinux-stable-bin
+brave
+beekeeper-studio-bin
+wps-office
+slack-desktop
+gitahead
