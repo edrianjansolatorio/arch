@@ -79,10 +79,7 @@ fi
 if [ "$DESKTOP" == "KDE" ]; then
 
 ### OPTION-1
-# pacstrap -i /mnt --needed --noconfirm xorg plasma plasma-wayland-session sddm
-
-### OPTION-2
-pacstrap -i /mnt --needed --noconfirm xorg xorg-xinit plasma-desktop
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
 
 fi
 

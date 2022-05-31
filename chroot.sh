@@ -28,7 +28,6 @@ groups $USERNAME
 # ---------------- DEBUG AREA ------------------ #
 ./apps.sh
 
-echo "exec startkde" > ~/.xinitrc
 # ---------------- DEBUG AREA ------------------ #
 
 # ---------- G14 kernel ---------- #
