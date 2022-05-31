@@ -32,6 +32,8 @@ groups $USERNAME
 
 # ---------- G14 kernel ---------- #
 
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+
 echo "[Unit]
 Description=Set the battery charge threshold
 After=multi-user.target
