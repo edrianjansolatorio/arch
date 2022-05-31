@@ -32,25 +32,23 @@ groups $USERNAME
 
 # ---------- G14 kernel ---------- #
 
-# echo -e "[Unit]\n
-# Description=Set the battery charge threshold\n
-# After=multi-user.target\n
-# StartLimitBurst=0\n
-# \n
-# [Service]\n
-# Type=oneshot\n
-# Restart=on-failure\n
-# ExecStart=/bin/bash -c 'echo 60 > /sys/class/power_supply/BAT1/charge_control_end_threshold'\n
-# \n
-# [Install]\n
-# WantedBy=multi-user.target\n" >> /etc/systemd/system/battery-charge-threshold.service
+echo "[Unit]
+Description=Set the battery charge threshold
+After=multi-user.target
+StartLimitBurst=0
 
-G14="
-[g14]\n
+[Service]
+Type=oneshot
+Restart=on-failure
+ExecStart=/bin/bash -c 'echo 60 > /sys/class/power_supply/BAT1/charge_control_end_threshold'
+
+[Install]
+WantedBy=multi-user.target\n" >> /etc/systemd/system/battery-charge-threshold.service
+
+echo "
+[g14]
 SigLevel = DatabaseNever Optional TrustAll\n
-Server = https://arch.asus-linux.org\n
-"
-echo "$G14" >> /etc/pacman.conf
+Server = https://arch.asus-linux.org" >> /etc/pacman.conf
 
 pacman -Syu
 pacman -S --noconfirm --needed asusctl supergfxctl supergfxd linux-g14 linux-g14-headers
