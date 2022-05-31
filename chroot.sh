@@ -56,8 +56,7 @@ pacman -S --noconfirm --needed asusctl supergfxctl supergfxd linux-g14 linux-g14
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
 systemctl --user enable asus-notify.service
-
-# systemctl enable battery-charge-threshold.service
+systemctl enable battery-charge-threshold.service
 
 # ---------- G14 kernel ---------- #
 
