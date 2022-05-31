@@ -53,7 +53,7 @@ SigLevel = DatabaseNever Optional TrustAll
 Server = https://arch.asus-linux.org" >> /etc/pacman.conf
 
 pacman -Syu
-pacman -S --noconfirm --needed asusctl supergfxctl supergfxd linux-g14 linux-g14-headers
+pacman -Sy --noconfirm --needed asusctl supergfxctl supergfxd linux-g14 linux-g14-headers
 
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
