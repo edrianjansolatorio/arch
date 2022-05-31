@@ -45,7 +45,7 @@ Restart=on-failure
 ExecStart=/bin/bash -c 'echo 60 > /sys/class/power_supply/BAT1/charge_control_end_threshold'
 
 [Install]
-WantedBy=multi-user.target\n" >> /etc/systemd/system/battery-charge-threshold.service
+WantedBy=multi-user.target" >> /etc/systemd/system/battery-charge-threshold.service
 
 echo "
 [g14]
