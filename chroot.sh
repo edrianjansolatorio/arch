@@ -53,7 +53,10 @@ SigLevel = DatabaseNever Optional TrustAll
 Server = https://arch.asus-linux.org" >> /etc/pacman.conf
 
 pacman -Syu
+
+read -p "Debug mode Error here"
 pacman -Sy --noconfirm --needed asusctl supergfxctl supergfxd linux-g14 linux-g14-headers
+read -p "Debug mode Error here"
 
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
