@@ -108,6 +108,13 @@ echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
 sed -i "s/#\[multilib]/[multilib]/" /mnt/etc/pacman.conf
 sed -i "$!N;s/\(\[multilib]\n\)#\(Include\)/\1\2/;P;D" /mnt/etc/pacman.conf
 
+echo "
+[g14]
+SigLevel = DatabaseNever Optional TrustAll
+Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
+
+exit 0
+
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt
 cp ./settings.conf /mnt
