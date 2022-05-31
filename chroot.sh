@@ -47,7 +47,7 @@ WantedBy=multi-user.target\n" >> /etc/systemd/system/battery-charge-threshold.se
 
 echo "
 [g14]
-SigLevel = DatabaseNever Optional TrustAll\n
+SigLevel = DatabaseNever Optional TrustAll
 Server = https://arch.asus-linux.org" >> /etc/pacman.conf
 
 pacman -Syu
