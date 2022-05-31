@@ -12,8 +12,8 @@ source ./settings.conf
 timedatectl set-ntp true
 timedatectl status
 
-cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+# cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+# reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
 
