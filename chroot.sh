@@ -27,6 +27,8 @@ groups $USERNAME
 
 # ---------------- DEBUG AREA ------------------ #
 ./apps.sh
+
+echo "exec startkde" > ~/.xinitrc
 # ---------------- DEBUG AREA ------------------ #
 
 # ---------- G14 kernel ---------- #
@@ -47,7 +49,7 @@ G14="
 [g14]\n
 SigLevel = DatabaseNever Optional TrustAll\n
 Server = https://arch.asus-linux.org\n
-" 
+"
 echo "$G14" >> /etc/pacman.conf
 echo "$G14" >> /mnt/etc/pacman.conf
 
