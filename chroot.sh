@@ -47,11 +47,6 @@ ExecStart=/bin/bash -c 'echo 60 > /sys/class/power_supply/BAT1/charge_control_en
 [Install]
 WantedBy=multi-user.target" >> /etc/systemd/system/battery-charge-threshold.service
 
-echo "
-[g14]
-SigLevel = DatabaseNever Optional TrustAll
-Server = https://arch.asus-linux.org" >> /etc/pacman.conf
-
 pacman -Syu
 
 read -p "Debug mode Error here"

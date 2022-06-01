@@ -113,8 +113,6 @@ echo "
 SigLevel = DatabaseNever Optional TrustAll
 Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
 
-exit 0
-
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt
 cp ./settings.conf /mnt
