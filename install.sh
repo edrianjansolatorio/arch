@@ -86,7 +86,9 @@ fi
 # ---------------- GPU ------------------- #
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
+read -p "debug: nvidia"
 pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+read -p "debug: nvidia"
 fi
 # ---------------- GPU ------------------- #
 
