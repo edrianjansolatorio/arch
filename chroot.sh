@@ -49,14 +49,15 @@ WantedBy=multi-user.target" >> /etc/systemd/system/battery-charge-threshold.serv
 
 pacman -Syu
 
-read -p "Debug mode Error here"
 pacman -Sy --noconfirm --needed asusctl supergfxctl linux-g14 linux-g14-headers
-read -p "Debug mode Error here"
 
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
 systemctl --user enable asus-notify.service
+
+read -p "battery threshold: debug"
 systemctl enable battery-charge-threshold.service
+read -p "battery threshold: debug"
 
 # ---------- G14 kernel ---------- #
 
