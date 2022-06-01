@@ -32,8 +32,6 @@ groups $USERNAME
 
 # ---------- G14 kernel ---------- #
 
-cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
-
 echo "[Unit]
 Description=Set the battery charge threshold
 After=multi-user.target
@@ -54,10 +52,7 @@ pacman -Sy --noconfirm --needed asusctl supergfxctl linux-g14 linux-g14-headers
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
 systemctl --user enable asus-notify.service
-
-read -p "battery threshold: debug"
 systemctl enable battery-charge-threshold.service
-read -p "battery threshold: debug"
 
 # ---------- G14 kernel ---------- #
 

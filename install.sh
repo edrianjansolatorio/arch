@@ -12,8 +12,8 @@ source ./settings.conf
 timedatectl set-ntp true
 timedatectl status
 
-# cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-# reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
 
@@ -90,6 +90,7 @@ pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib
 fi
 # ---------------- GPU ------------------- #
 
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
