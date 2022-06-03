@@ -7,6 +7,8 @@ exit 0
 fi
 }
 
+checkline
+
 debug () {
 $1
 read -p "debugging"
