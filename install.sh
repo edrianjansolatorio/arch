@@ -95,7 +95,7 @@ cat /mnt/etc/fstab
 if [ "$DESKTOP" == "KDE" ]; then
 
 ### OPTION-1
-pacstrap -i /mnt --needed --noconfirm xorg plasma-del;sktop plasma-wayland-session sddm
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
 
 fi
 
