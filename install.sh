@@ -20,9 +20,6 @@ source ./settings.conf
 timedatectl set-ntp true
 timedatectl status
 
-cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
 if [ "$BOOT_TYPE" == "EFI" ]; then
 
 umount -A --recursive /mnt
@@ -46,7 +43,7 @@ mount -t btrfs ${NEW_DISK}3 /mnt
 # echo "Y" | mkfs.ext4 ${NEW_DISK}3
 
 mkfs.fat -F32 ${NEW_DISK}1
-mkswap ${NEW_DISK}2 
+mkswap ${NEW_DISK}2
 swapon ${NEW_DISK}2
 # mount ${NEW_DISK}3 /mnt
 
@@ -74,6 +71,9 @@ fi
 lsblk
 fdisk -l
 
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+
 # -- debugging -- #
 
 pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring git
@@ -82,8 +82,6 @@ pacstrap -i /mnt --needed --noconfirm grub
 if [ "$BOOT_TYPE" == "EFI" ]; then
 pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
-
-cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
@@ -109,6 +107,8 @@ fi
 
 # ---------------- GPU ------------------- #
 
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
 ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
 
@@ -127,6 +127,7 @@ echo "
 [g14]
 SigLevel = DatabaseNever Optional TrustAll
 Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
+
 
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt
