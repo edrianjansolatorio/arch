@@ -1,5 +1,12 @@
 #!/bin/bash
 
+checkline() {
+read -p "continue?" confirmation
+if [[ $confirmation === "n" ]]; then
+exit 0
+fi
+}
+
 debug () {
 $1
 read -p "debugging"
@@ -29,10 +36,16 @@ sgdisk -n 3::-0 --typecode=3:8300 --change-name=3:'ROOT' ${DISK} # FILE SYSTEM /
 
 NEW_DISK=${DISK}${DISK_PREFIX}
 
+# ------------- DEBUG: ENCRYPT SET-UP ------------------- #
+echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${NEW_DISK}3 -
+echo -n "${PASSWORD}" | cryptsetup open ${NEW_DISK}3 ROOT -
+mkfs.btrfs -L ROOT ${NEW_DISK}3
+# ------------- DEBUG: ENCRYPT SET-UP ------------------- #
+# echo "Y" | mkfs.ext4 ${NEW_DISK}3
+
 mkfs.fat -F32 ${NEW_DISK}1
 mkswap ${NEW_DISK}2
 swapon ${NEW_DISK}2
-echo "Y" | mkfs.ext4 ${NEW_DISK}3
 mount ${NEW_DISK}3 /mnt
 
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
