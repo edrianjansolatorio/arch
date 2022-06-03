@@ -44,7 +44,7 @@ sgdisk -Z ${DISK}
 sgdisk -a 2048 -o ${DISK}
 
 sgdisk -n 1::+1M --typecode=1:ef02 --change-name=1:'BOOT' ${DISK} # BOOT /dev/nvme0n1p1
-sgdisk -n 2::+4g --typecode=2:8200 --change-name=2:'SWAP' ${DISK} # SWAP /dev/nvme0n1p2
+sgdisk -n 2::+2g --typecode=2:8200 --change-name=2:'SWAP' ${DISK} # SWAP /dev/nvme0n1p2
 sgdisk -n 3::-0 --typecode=3:8300 --change-name=3:'ROOT' ${DISK} # FILE SYSTEM /dev/nvme0n1p3
 
 NEW_DISK=${DISK}${DISK_PREFIX}
@@ -80,7 +80,7 @@ cat /mnt/etc/fstab
 if [ "$DESKTOP" == "KDE" ]; then
 
 ### OPTION-1
-pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
+pacstrap -i /mnt --needed --noconfirm xorg plasma-del;sktop plasma-wayland-session sddm
 
 fi
 
