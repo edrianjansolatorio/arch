@@ -2,7 +2,7 @@
 
 checkline() {
 read -p "continue?" confirmation
-if [[ "$confirmation" === "n" ]]; then
+if [[ "$confirmation" == "n" ]]; then
 exit 0
 fi
 }
