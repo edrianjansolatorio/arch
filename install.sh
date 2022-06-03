@@ -41,13 +41,14 @@ NEW_DISK=${DISK}${DISK_PREFIX}
 echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${NEW_DISK}3 -
 echo -n "${PASSWORD}" | cryptsetup open ${NEW_DISK}3 ROOT -
 mkfs.btrfs -L ROOT ${NEW_DISK}3
+mount -t btrfs ${NEW_DISK}3 /mnt
 # ------------- DEBUG: ENCRYPT SET-UP ------------------- #
 # echo "Y" | mkfs.ext4 ${NEW_DISK}3
 
 mkfs.fat -F32 ${NEW_DISK}1
-mkswap ${NEW_DISK}2
+mkswap ${NEW_DISK}2 
 swapon ${NEW_DISK}2
-mount ${NEW_DISK}3 /mnt
+# mount ${NEW_DISK}3 /mnt
 
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
 
