@@ -1,13 +1,12 @@
 #!/bin/bash
 
 checkline() {
+$1
 read -p "continue?" confirmation
 if [[ "$confirmation" == "n" ]]; then
 exit 0
 fi
 }
-
-checkline
 
 debug () {
 $1
@@ -71,14 +70,12 @@ mkswap ${NEW_DISK}2
 mount ${NEW_DISK}3 /mnt
 fi
 
-lsblk
+checkline "lsblk"
 fdisk -l
 
 # -- debugging -- #
 
 pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring git
-pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
-
 pacstrap -i /mnt --needed --noconfirm grub
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
@@ -91,6 +88,8 @@ genfstab -U -p /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
 
 # ----------------- KDE ------------------ #
+
+pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
 
 if [ "$DESKTOP" == "KDE" ]; then
 
