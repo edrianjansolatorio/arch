@@ -70,6 +70,11 @@ if [ "$BOOT_TYPE" == "EFI" ]; then
 pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
 
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+
+genfstab -U -p /mnt >> /mnt/etc/fstab
+cat /mnt/etc/fstab
+
 # ----------------- KDE ------------------ #
 
 if [ "$DESKTOP" == "KDE" ]; then
@@ -86,12 +91,8 @@ read -p "debug: nvidia"
 pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
 read -p "debug: nvidia"
 fi
+
 # ---------------- GPU ------------------- #
-
-cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
-
-genfstab -U -p /mnt >> /mnt/etc/fstab
-cat /mnt/etc/fstab
 
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
 ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
