@@ -8,11 +8,6 @@ exit 0
 fi
 }
 
-debug () {
-$1
-read -p "debugging"
-}
-
 ./setup.sh
 
 source ./settings.conf
