@@ -80,6 +80,9 @@ if [ "$BOOT_TYPE" == "EFI" ]; then
     echo 'bcf boot add 1 fs0:\EFI\GRUB\grubx64.efi "My GRUB bootloader"' >> /boot/efi/startup.nsh
     echo 'exit' >> /boot/efi/startup.nsh
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
+    mkdir /mnt/boot
+    mount ${NEW_DISK}1 /mnt/boot
+    swapon ${NEW_DISK}2
     grub-install ${DISK}
     grub-mkconfig -o /boot/grub/grub.cfg
 fi

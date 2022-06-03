@@ -54,10 +54,6 @@ echo "Y" | mkfs.ext4 ${NEW_DISK}3
 mkswap ${NEW_DISK}2
 
 mount ${NEW_DISK}3 /mnt
-mkdir /mnt/boot
-mount ${NEW_DISK}1 /mnt/boot
-swapon ${NEW_DISK}2
-
 fi
 
 lsblk
