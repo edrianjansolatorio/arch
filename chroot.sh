@@ -81,8 +81,8 @@ if [ "$BOOT_TYPE" == "EFI" ]; then
     echo 'exit' >> /boot/efi/startup.nsh
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
     mkdir /mnt/boot
-    mount ${NEW_DISK}1 /mnt/boot
+    mount ${NEW_DISK}1 /boot
     swapon ${NEW_DISK}2
-    grub-install ${DISK}
+    grub-install --boot-directory=/boot ${DISK}
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
