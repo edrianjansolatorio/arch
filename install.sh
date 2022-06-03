@@ -70,7 +70,7 @@ mkswap ${NEW_DISK}2
 mount ${NEW_DISK}3 /mnt
 fi
 
-checkline "lsblk"
+lsblk
 fdisk -l
 
 # -- debugging -- #
