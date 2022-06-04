@@ -167,6 +167,9 @@ cp ./settings.conf /mnt
 
 arch-chroot /mnt /chroot.sh
 
-umount -R /mnt
+# @@@ #
+# umount -R /mnt
 
-reboot
+# reboot
+
+# @@@ #
