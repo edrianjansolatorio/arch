@@ -1,11 +1,11 @@
 #!/bin/bash
 
 checkline() {
-$1
-read -p "continue?" confirmation
-if [[ "$confirmation" != "y" ]]; then
-exit 0
-fi
+ $1
+ read -p "continue?" confirmation
+ if [[ "$confirmation" != "y" ]]; then
+  exit 0
+ fi
 }
 
 ./setup.sh

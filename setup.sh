@@ -1,25 +1,25 @@
 #!/bin/bash
 
 checkline() {
-$1
-read -p "continue?" confirmation
+ $1
+ read -p "continue?" confirmation
 if [[ "$confirmation" != "y" ]]; then
-exit 0
+ exit 0
 fi
 }
 
 reset () {
-echo -e "
-DESKTOP=
-DISK=
-DISK_PREFIX=
-BOOT_TYPE=
-USERNAME=
-PASSWORD=
-GPU_TYPE=
-HOST_NAME=
-GRUB_TITLE=
-INSTALL_TYPE=
+ echo -e "
+ DESKTOP=
+ DISK=
+ DISK_PREFIX=
+ BOOT_TYPE=
+ USERNAME=
+ PASSWORD=
+ GPU_TYPE=
+ HOST_NAME=
+ GRUB_TITLE=
+ INSTALL_TYPE=
 " > ./settings.conf
 }
 
