@@ -130,7 +130,7 @@ Server = https://arch.asus-linux.org" >> /etc/pacman.conf
 
 pacman -Sy --noconfirm --needed linux-g14 linux-g14-headers
 
-# -[MIGHT DELETE LATER [END]- #
+# -MIGHT DELETE LATER [END]- #
 
 echo "
 title ${GRUB_TITLE}
