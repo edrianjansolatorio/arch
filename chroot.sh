@@ -126,3 +126,5 @@ elif [ "$BOOT_TYPE" == "LEGACY" ]; then
     grub-install --boot-directory=/boot ${DISK}
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
+
+exit 0
