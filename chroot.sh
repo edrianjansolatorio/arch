@@ -101,7 +101,8 @@ timeout 3
 editor 0
 " > /boot/loader/loader.conf
 
-checkline "cat /boot/loader/loader.conf"
+# checkline "cat /boot/loader/loader.conf"
+cat /boot/loader/loader.conf
 
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
@@ -112,9 +113,8 @@ initrd /initramfs-linux.img
 options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${VOLGROUP}-ROOT quiet rw
 " > /boot/loader/entries/arch.conf
 
-checkline "cat /boot/loader/entries/arch.conf"
-
-exit 0
+# checkline "cat /boot/loader/entries/arch.conf"
+cat /boot/loader/entries/arch.conf
 
 # ---------- ENCRYPT SET-UP ---------- #
 

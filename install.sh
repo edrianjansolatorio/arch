@@ -83,7 +83,8 @@ mount ${NEW_DISK}3 /mnt
 fi
 
 fdisk -l
-checkline "lsblk"
+# checkline "lsblk"
+lsblk
 
 # @@@ #
 # cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
@@ -102,7 +103,8 @@ fi
 # genfstab -U -p /mnt >> /mnt/etc/fstab
 genfstab -p /mnt >> /mnt/etc/fstab
 
-checkline "cat /mnt/etc/fstab"
+# checkline "cat /mnt/etc/fstab"
+cat /mnt/etc/fstab
 
 # ----------------- KDE ------------------ #
 
