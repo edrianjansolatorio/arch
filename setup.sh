@@ -130,11 +130,14 @@ echo "INSTALL_TYPE IS BASIC/GUI"
 read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
 desktop=${desktop_list[$desktop_environment - 1]}
 
-fi
+else
 
 install_type="BASIC"
 echo "INSTALL_TYPE IS BASIC"
 desktop="--"
+
+fi
+
 
 choosed_disk=${disk[$disk_choose - 1]}
 username=$user
