@@ -83,32 +83,30 @@ VOLGROUP=scrubs
 
 sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck)/g' /etc/mkinitcpio.conf
 
-checkline "cat /etc/mkinitcpio.conf"
+cat /etc/mkinitcpio.conf
 
 pacman -Sy --noconfirm --needed lvm2
 mkinitcpio -p linux
 bootctl --path=/boot/ install
 
-checkline
-
 echo "
 default arch
 timeout 3
 editor 0
-" > /etc/loader/loader.conf
+" > /boot/loader/loader.conf
 
 checkline "cat /etc/loader/loader.conf"
 
-# blkid /dev/${DISK}${DISK_PREFIX}2
+DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
-# echo "
-# title Shingha System
-# linux /vmlinuz-linux
-# initrd /initramfs-linux.img
-# options cryptdevice=UUID=
-# "
+echo "
+title Shingha System
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${VOLGROUP}-ROOT quiet rw
+" > /boot/loader/entries/arch.conf
 
-exit 0
+checkline "cat /boot/loader/entries/arch.conf"
 
 # ---------- ENCRYPT SET-UP ---------- #
 
