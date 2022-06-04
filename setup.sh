@@ -24,7 +24,7 @@ INSTALL_TYPE=
 }
 
 update_settings () {
-sed -i 's/$1=/$1="$2"/g' ./settings.conf
+sed -i 's/$1=/$1=$2/g' ./settings.conf
 }
 
 reset
@@ -144,7 +144,7 @@ update_settings "DISK" "$choosed_disk"
 update_settings "HOST_NAME" "$host_name"
 update_settings "USERNAME" "$username"
 update_settings "PASSWORD" "$password"
-update_settings "GRUB_TITLE" "$grub_title"
+update_settings "GRUB_TITLE" "\"$grub_title\""
 update_settings "INSTALL_TYPE" "$install_type"
 update_settings "DESKTOP" "$desktop"
 
