@@ -115,6 +115,7 @@ echo -e ""
 read -p "HOST_NAME: " host_name
 read -p "USERNAME: " user
 read -sp "PASSWORD: " pass
+echo -e ""
 read -p "GRUB_TITLE: " grub_title
 
 echo "
@@ -124,13 +125,16 @@ echo "
 read -p "INSTALL_TYPE: " install_type
 
 if [ "$install_type" == "1" ]; then
+
 echo "INSTALL_TYPE IS BASIC/GUI"
 read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
 desktop=${desktop_list[$desktop_environment - 1]}
 
-else if [ "$install_type" == "0" ]; then
+elif [ "$install_type" == "0" ]; then
+
 echo "INSTALL_TYPE IS BASIC"
 desktop=--
+
 else
 desktop=--
 fi
