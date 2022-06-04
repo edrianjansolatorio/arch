@@ -64,9 +64,11 @@ fi
 
 # ----------- RUN SERVICES -------------- #
 
-systemctl enable NetworkManager
-systemctl enable dhcpcd
-systemctl enable iwd.service
+# @@@ #
+# systemctl enable NetworkManager
+# systemctl enable dhcpcd
+# systemctl enable iwd.service
+# @@@ #
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
 
