@@ -85,6 +85,7 @@ sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block encrypt lvm
 
 checkline "cat /etc/mkinitcpio.conf"
 
+pacman -Sy --noconfirm --needed lvm2
 mkinitcpio -p linux
 bootctl --path=/boot/ install
 
