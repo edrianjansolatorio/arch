@@ -1,9 +1,16 @@
 #!/bin/bash
 
-DEBUG=true
+DEBUG=false
 
 checkline() {
 $1
+echo -ne "
+# ======================================================================== #
+
+                              DEBUG PA BOSS
+
+# ======================================================================== #
+"
 read -p "continue?: " confirmation
 if [[ "$confirmation" != "y" ]]; then
 exit 0
