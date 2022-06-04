@@ -8,10 +8,11 @@ exit 0
 fi
 }
 
-checkline "cat /etc/localtime"
-checkline "cat /mnt/etc/hosts"
-checkline "cat /mnt/etc/sudoers"
-checkline "cat /mnt/etc/pacman.conf"
+checkline "cat /etc/locale.gen"
+checkline "ls /etc/localtime"
+checkline "cat /etc/hosts"
+checkline "cat /etc/sudoers"
+checkline "cat /etc/pacman.conf"
 
 source ./settings.conf
 
