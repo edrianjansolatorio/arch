@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DEBUG=true
+
 checkline() {
 $1
 read -p "continue?: " confirmation
@@ -54,9 +56,13 @@ fi
 
 # ----------- RUN SERVICES -------------- #
 
+if [ "$DEBUG" = true ] ; then
+
 systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable iwd.service
+
+fi
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
 

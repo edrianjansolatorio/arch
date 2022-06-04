@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DEBUG=true
+
 checkline() {
 $1
 read -p "continue?" confirmation
@@ -142,7 +144,10 @@ Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
 
 # ----------------- KDE ------------------ #
 
+if [ "$DEBUG" = true ] ; then
 pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
+fi
+
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
 
