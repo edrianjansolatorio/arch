@@ -100,7 +100,7 @@ pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
 
 # genfstab -U -p /mnt >> /mnt/etc/fstab
-genfstab -u -p /mnt >> /mnt/etc/fstab
+genfstab -p /mnt >> /mnt/etc/fstab
 
 checkline "cat /mnt/etc/fstab"
 
