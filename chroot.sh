@@ -112,10 +112,17 @@ cat /boot/loader/loader.conf
 
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
+# echo "
+# title ${GRUB_TITLE}
+# linux /vmlinuz-linux
+# initrd /initramfs-linux.img
+# options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${USERNAME}-ROOT quiet rw
+# " > /boot/loader/entries/arch.conf
+
 echo "
 title ${GRUB_TITLE}
-linux /vmlinuz-linux-g14
-initrd /initramfs-linux-g14.img
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
 options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${USERNAME}-ROOT quiet rw
 " > /boot/loader/entries/arch.conf
 
