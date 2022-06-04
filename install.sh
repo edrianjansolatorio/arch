@@ -37,8 +37,8 @@ mkfs.fat -F32 ${NEW_DISK}1
 STORAGE_NAME=shingha
 VOLGROUP=scrubs
 
-echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat /dev/sda2 -
-echo -n "${PASSWORD}" | cryptsetup open --type luks /dev/sda2 ${STORAGE_NAME} -
+echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${NEW_DISK}2 -
+echo -n "${PASSWORD}" | cryptsetup open --type luks ${NEW_DISK}2 ${STORAGE_NAME} -
 
 if [[ ! "/dev/mapper/${STORAGE_NAME}" ]]; then
 	exit 0
