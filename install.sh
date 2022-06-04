@@ -56,9 +56,6 @@ mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 swapon /dev/mapper/${VOLGROUP}-SWAP
 
-lsblk
-fdisk -l
-
 # ------------- DEBUG: ENCRYPT SET-UP ------------------- #
 
 
@@ -86,7 +83,7 @@ mount ${NEW_DISK}3 /mnt
 fi
 
 fdisk -l
-checkline "lsblk"
+lsblk
 
 # @@@ #
 # cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
