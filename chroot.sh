@@ -77,7 +77,7 @@ echo "SDDM service"
 fi
 
 # @@@ #
-systemctl enable bluetooth
+# systemctl enable bluetooth
 # @@@ #
 
 # ---------- RUN SERVICES ------------ #
