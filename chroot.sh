@@ -15,9 +15,9 @@ locale > /etc/locale.conf
 
 hwclock --systohc --utc
 
-echo -n "${PASSWORD}" | passwd
+echo -n "root:${PASSWORD}" | chpasswd
 useradd -m $USERNAME
-echo -n "${PASSWORD}" | passwd $USERNAME
+echo -n "$USERNAME:${PASSWORD}" | chpasswd
 
 whereis sudo
 usermod -aG wheel,audio,video,optical,storage $USERNAME
