@@ -24,7 +24,7 @@ INSTALL_TYPE=
 }
 
 update_settings () {
-sed -i "s/$1=/$1="$2"/g" ./settings.conf
+sed -i 's/$1=/$1="$2"/g' ./settings.conf
 }
 
 reset
