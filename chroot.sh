@@ -103,7 +103,7 @@ timeout 3
 editor 0
 " > /boot/loader/loader.conf
 
-checkline "cat /etc/loader/loader.conf"
+checkline "cat /boot/loader/loader.conf"
 
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
