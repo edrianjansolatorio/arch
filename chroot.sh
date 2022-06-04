@@ -56,7 +56,7 @@ fi
 
 # ----------- RUN SERVICES -------------- #
 
-if [ "$DEBUG" = true ] ; then
+if [ "$DEBUG" != true ] ; then
 
 systemctl enable NetworkManager
 systemctl enable dhcpcd

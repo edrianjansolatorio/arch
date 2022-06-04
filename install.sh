@@ -144,7 +144,7 @@ Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
 
 # ----------------- KDE ------------------ #
 
-if [ "$DEBUG" = true ] ; then
+if [ "$DEBUG" != true ] ; then
 pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
 fi
 
