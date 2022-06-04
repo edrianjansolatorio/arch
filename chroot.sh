@@ -8,7 +8,7 @@ exit 0
 fi
 }
 
-checkline "cat /etc/pacman.conf"
+checkline "cat /etc/systemd/system/battery-charge-threshold.service"
 
 source ./settings.conf
 
@@ -37,19 +37,6 @@ fi
 # ---------- G14 kernel ---------- #
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
-
-echo "[Unit]
-Description=Set the battery charge threshold
-After=multi-user.target
-StartLimitBurst=0
-
-[Service]
-Type=oneshot
-Restart=on-failure
-ExecStart=/bin/bash -c 'echo 60 > /sys/class/power_supply/BAT1/charge_control_end_threshold'
-
-[Install]
-WantedBy=multi-user.target" >> /etc/systemd/system/battery-charge-threshold.service
 
 pacman -Syu
 

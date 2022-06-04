@@ -116,7 +116,6 @@ WantedBy=multi-user.target" >> /mnt/etc/systemd/system/battery-charge-threshold.
 
 # TEST [start] #
 
-checkline "cat /mnt/etc/systemd/system/battery-charge-threshold.service"
 
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
 ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
