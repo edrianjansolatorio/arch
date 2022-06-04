@@ -10,9 +10,6 @@ exit 0
 fi
 }
 
-cat /etc/systemd/system/battery-charge-threshold.service
-read -p ""
-
 source ./settings.conf
 
 locale-gen
