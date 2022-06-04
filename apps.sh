@@ -10,15 +10,15 @@ pacman -Sy --noconfirm --needed firefox
 # pacman -Sy --noconfirm --needed gimp
 
 if [ "$DESKTOP" == "KDE" ]; then
-    # important apps
-    pacman -Sy --noconfirm kwrite ark dolphin kwallet konsole latte-dock
+ # important apps
+ pacman -Sy --noconfirm kwrite ark dolphin kwallet konsole latte-dock
 
-    # bluetooth
-    pacman -Sy --noconfirm pulseaudio-alsa pulseaudio-bluetooth bluez-utils bluez
+ # bluetooth
+ pacman -Sy --noconfirm pulseaudio-alsa pulseaudio-bluetooth bluez-utils bluez
 
-    # for vscode to access login
-    pacman -Sy --noconfirm gnome-keyring libsecret
+ # for vscode to access login
+ pacman -Sy --noconfirm gnome-keyring libsecret
 
-    # fix sound and wifi applet
-    pacman -Sy --noconfirm plasma-pa plasma-nm
+ # fix sound and wifi applet
+ pacman -Sy --noconfirm plasma-pa plasma-nm
 fi

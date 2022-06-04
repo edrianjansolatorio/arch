@@ -33,6 +33,7 @@ checkline ""
 
 # ---------- G14 kernel ---------- #
 
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
 
 echo "[Unit]
 Description=Set the battery charge threshold
@@ -56,6 +57,8 @@ systemctl enable power-profiles-daemon.service
 systemctl --user enable asus-notify.service
 systemctl enable battery-charge-threshold.service
 
+fi
+
 # ---------- G14 kernel ---------- #
 
 # ----------- RUN SERVICES -------------- #
@@ -64,12 +67,14 @@ systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable iwd.service
 
-if [ "$DESKTOP" == "KDE" ]; then
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
+
 echo "SDDM service"
 systemctl enable sddm.service
+systemctl enable bluetooth
+
 fi
 
-systemctl enable bluetooth
 
 # ---------- RUN SERVICES ------------ #
 
