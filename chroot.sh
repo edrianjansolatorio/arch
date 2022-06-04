@@ -78,6 +78,16 @@ systemctl enable bluetooth
 
 fi
 
+# ---------------- GPU ------------------- #
+
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$GPU_TYPE" == "NVIDIA" ]; then
+echo "nvidia"
+
+pacman -Sy --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+fi
+
+# ---------------- GPU ------------------- #
+
 
 # ---------- RUN SERVICES ------------ #
 

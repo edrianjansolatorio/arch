@@ -113,16 +113,6 @@ pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session
 
 fi
 
-# ---------------- GPU ------------------- #
-
-if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$GPU_TYPE" == "NVIDIA" ]; then
-echo "nvidia"
-
-pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
-fi
-
-# ---------------- GPU ------------------- #
-
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
 
 cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
