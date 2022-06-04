@@ -23,12 +23,13 @@ whereis sudo
 usermod -aG wheel,audio,video,optical,storage $USERNAME
 groups $USERNAME
 
-checkline ""
-
 # ---------------- DEBUG AREA ------------------ #
+
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
 
 ./apps.sh
 
+fi
 # ---------------- DEBUG AREA ------------------ #
 
 # ---------- G14 kernel ---------- #
