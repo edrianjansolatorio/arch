@@ -1,8 +1,11 @@
 #!/bin/bash
 
-debug () {
+checkline() {
 $1
-read -p "debugging"
+read -p "continue?" confirmation
+if [[ "$confirmation" != "y" ]]; then
+exit 0
+fi
 }
 
 reset () {
@@ -16,6 +19,7 @@ PASSWORD=
 GPU_TYPE=
 HOST_NAME=
 GRUB_TITLE=
+INSTALL_TYPE=
 " > ./settings.conf
 }
 
@@ -108,24 +112,40 @@ do
 done
 
 echo -e ""
-
-read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
 read -p "HOST_NAME: " host_name
 read -p "USERNAME: " user
 read -sp "PASSWORD: " pass
 read -p "GRUB_TITLE: " grub_title
 
-choosed_disk=${disk[$disk_choose - 1]}
+echo "
+0: basic
+1: basic/gui
+"
+read -p "INSTALL_TYPE: " install_type
+
+if [ "$install_type" == "1" ]; then
+echo "INSTALL_TYPE IS BASIC/GUI"
+read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
 desktop=${desktop_list[$desktop_environment - 1]}
+
+else if [ "$install_type" == "0" ]; then
+echo "INSTALL_TYPE IS BASIC"
+desktop=--
+else
+desktop=--
+fi
+
+choosed_disk=${disk[$disk_choose - 1]}
 username=$user
 password=$pass
 
 update_settings "DISK" "$choosed_disk"
-update_settings "DESKTOP" "$desktop"
 update_settings "HOST_NAME" "$host_name"
 update_settings "USERNAME" "$username"
 update_settings "PASSWORD" "$password"
 update_settings "GRUB_TITLE" "$grub_title"
+update_settings "INSTALL_TYPE" "$install_type"
+update_settings "DESKTOP" "$desktop"
 
 index=0
 
@@ -135,4 +155,4 @@ do
     echo "$index. ${i}"
 done
 
-cat ./settings.conf
+checkline "cat ./settings.conf"
