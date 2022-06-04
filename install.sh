@@ -134,12 +134,16 @@ fi
 
 # ---------------- GPU ------------------- #
 
-cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+# @@@ #
+# cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+# @@@ #
 
-echo $HOST_NAME >> /mnt/etc/hostname
-echo "127.0.0.1 localhost" >> /mnt/etc/hosts
-echo "::1   localhost" >> /mnt/etc/hosts
-echo "127.0.0.1 $HOST_NAME.localdomain  $HOST_NAME" >> /mnt/etc/hosts
+echo "
+$HOST_NAME
+127.0.0.1 localhost
+::1       localhost
+127.0.0.1 $HOST_NAME.localdomain $HOST_NAME
+" > /mnt/etc/hosts
 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
 echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
