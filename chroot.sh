@@ -63,15 +63,22 @@ groups $USERNAME
 
 # ----------- RUN SERVICES -------------- #
 
-systemctl enable NetworkManager
-systemctl enable dhcpcd
-systemctl enable iwd.service
+# @@@ #
+# systemctl enable NetworkManager
+# systemctl enable dhcpcd
+# systemctl enable iwd.service
+# @@@ #
 
 if [ "$DESKTOP" == "KDE" ]; then
-systemctl enable sddm.service
+echo "SDDM service"
+# @@@ #
+# systemctl enable sddm.service
+# @@@ #
 fi
 
+# @@@ #
 systemctl enable bluetooth
+# @@@ #
 
 # ---------- RUN SERVICES ------------ #
 
@@ -109,6 +116,8 @@ options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${VOLGROUP}-ROOT qui
 
 checkline "cat /boot/loader/entries/arch.conf"
 
+exit 0
+
 # ---------- ENCRYPT SET-UP ---------- #
 
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
@@ -118,5 +127,3 @@ elif [ "$BOOT_TYPE" == "LEGACY" ]; then
     grub-install --boot-directory=/boot ${DISK}
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
-
-exit 0
