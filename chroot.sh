@@ -75,17 +75,18 @@ systemctl enable bluetooth
 
 # ---------- RUN SERVICES ------------ #
 
+if [ "$BOOT_TYPE" == "EFI" ]; then
+
 # ---------- ENCRYPT SET-UP ---------- #
 # "shingha" <--- custom name
 
 STORAGE_NAME=shingha
 VOLGROUP=scrubs
 
-sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck)/g' /etc/mkinitcpio.conf
-
+pacman -Sy --noconfirm --needed lvm2
+sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)/g' /etc/mkinitcpio.conf
 cat /etc/mkinitcpio.conf
 
-pacman -Sy --noconfirm --needed lvm2
 mkinitcpio -p linux
 bootctl --path=/boot/ install
 
@@ -95,7 +96,7 @@ timeout 3
 editor 0
 " > /boot/loader/loader.conf
 
-cat /etc/loader/loader.conf
+checkline "cat /etc/loader/loader.conf"
 
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
@@ -106,19 +107,10 @@ initrd /initramfs-linux.img
 options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${VOLGROUP}-ROOT quiet rw
 " > /boot/loader/entries/arch.conf
 
-cat /boot/loader/entries/arch.conf
+checkline "cat /boot/loader/entries/arch.conf"
 
 # ---------- ENCRYPT SET-UP ---------- #
 
-if [ "$BOOT_TYPE" == "EFI" ]; then
-    mkdir /boot/efi
-    mount ${DISK}${DISK_PREFIX}1 /boot/efi
-    grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
-    grub-mkconfig -o /boot/grub/grub.cfg
-    mkdir /boot/efi/EFI/BOOT
-    cp /boot/efi/EFI/GRUB/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
-    echo 'bcf boot add 1 fs0:\EFI\GRUB\grubx64.efi "My GRUB bootloader"' >> /boot/efi/startup.nsh
-    echo 'exit' >> /boot/efi/startup.nsh
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
     mkdir /mnt/boot
     mount ${NEW_DISK}1 /boot

@@ -83,7 +83,7 @@ mount ${NEW_DISK}3 /mnt
 fi
 
 fdisk -l
-lsblk
+checkline "lsblk"
 
 # @@@ #
 # cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
@@ -99,9 +99,10 @@ if [ "$BOOT_TYPE" == "EFI" ]; then
 pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
 
-genfstab -U -p /mnt >> /mnt/etc/fstab
+# genfstab -U -p /mnt >> /mnt/etc/fstab
+genfstab -u -p /mnt >> /mnt/etc/fstab
 
-cat /mnt/etc/fstab
+checkline "cat /mnt/etc/fstab"
 
 # ----------------- KDE ------------------ #
 
