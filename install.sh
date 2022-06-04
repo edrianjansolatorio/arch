@@ -53,7 +53,7 @@ mkfs.ext4 /dev/mapper/${VOLGROUP}-ROOT
 mkswap /dev/mapper/${VOLGROUP}-SWAP
 mount /dev/mapper/${VOLGROUP}-ROOT /mnt
 mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
+mount ${NEW_DISK}1 /mnt/boot
 swapon /dev/mapper/${VOLGROUP}-SWAP
 
 # ------------- DEBUG: ENCRYPT SET-UP ------------------- #
