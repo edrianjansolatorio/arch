@@ -118,6 +118,9 @@ read -p "INSTALL_TYPE: " install_type
 
 if [ "$install_type" == "1" ]; then
 
+
+echo -e ""
+
 index=0
 
 for i in $desktop_list
@@ -125,6 +128,8 @@ do
     index+=1
     echo "$index. $i"
 done
+
+echo -e ""
 
 echo "INSTALL_TYPE IS BASIC/GUI"
 read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
