@@ -15,7 +15,7 @@ locale > /etc/locale.conf
 
 hwclock --systohc --utc
 
-checkline "\$USERNAME: echo ${USERNAME}"
+checkline "echo '\$USERNAME: ${USERNAME}'"
 
 echo "root:${PASSWORD}" | chpasswd
 useradd -m $USERNAME

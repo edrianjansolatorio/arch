@@ -159,4 +159,4 @@ index+=1
 echo "$index. ${i}"
 done
 
-checkline "cat ./settings.conf"
+cat ./settings.conf
