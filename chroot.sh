@@ -8,7 +8,8 @@ exit 0
 fi
 }
 
-checkline "cat /etc/systemd/system/battery-charge-threshold.service"
+cat /etc/systemd/system/battery-charge-threshold.service
+read -p ""
 
 source ./settings.conf
 
@@ -71,7 +72,6 @@ if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$GPU_TYPE" == "NVIDIA" ]; then
 echo "nvidia"
 
 pacman -Sy --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
-checkline ""
 
 fi
 
