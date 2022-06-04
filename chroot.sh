@@ -8,16 +8,19 @@ exit 0
 fi
 }
 
+checkline "cat /etc/localtime"
+checkline "cat /mnt/etc/hosts"
+checkline "cat /mnt/etc/sudoers"
+checkline "cat /mnt/etc/pacman.conf"
+
 source ./settings.conf
 
-sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
-ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /etc/localtime
 locale-gen
 hwclock --systohc --utc
 
-echo -n "${PASSWORD}" | passwd root -
+echo -n "${PASSWORD}" | passwd
 useradd -m $USERNAME
-echo -n "${PASSWORD}" | passwd $USERNAME -
+echo -n "${PASSWORD}" | passwd $USERNAME
 
 whereis sudo
 usermod -aG wheel,audio,video,optical,storage $USERNAME

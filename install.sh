@@ -139,6 +139,9 @@ fi
 # cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
 # @@@ #
 
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
+ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
+
 echo "
 $HOST_NAME
 127.0.0.1 localhost
