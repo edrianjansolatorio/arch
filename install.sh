@@ -100,7 +100,8 @@ pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
-cat /mnt/etc/fstab
+
+checkline "cat /mnt/etc/fstab"
 
 # ----------------- KDE ------------------ #
 
