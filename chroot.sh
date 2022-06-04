@@ -8,6 +8,8 @@ exit 0
 fi
 }
 
+checkline "cat /etc/pacman.conf"
+
 source ./settings.conf
 
 locale-gen
@@ -51,7 +53,7 @@ WantedBy=multi-user.target" >> /etc/systemd/system/battery-charge-threshold.serv
 
 pacman -Syu
 
-pacman -Sy --noconfirm --needed asusctl supergfxctl linux-g14 linux-g14-headers
+pacman -Sy --noconfirm --needed asusctl supergfxctl
 
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
@@ -114,19 +116,8 @@ cat /boot/loader/loader.conf
 
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
-# echo "
-# title ${GRUB_TITLE}
-# linux /vmlinuz-linux
-# initrd /initramfs-linux.img
-# options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${USERNAME}-ROOT quiet rw
-# " > /boot/loader/entries/arch.conf
 
 # -MIGHT DELETE LATER [BEGIN]- #
-
-echo "
-[g14]
-SigLevel = DatabaseNever Optional TrustAll
-Server = https://arch.asus-linux.org" >> /etc/pacman.conf
 
 pacman -Sy --noconfirm --needed linux-g14 linux-g14-headers
 
