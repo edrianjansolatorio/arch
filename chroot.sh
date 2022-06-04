@@ -81,7 +81,7 @@ systemctl enable bluetooth
 STORAGE_NAME=shingha
 VOLGROUP=scrubs
 
-sed -r -i 's/(HOOKS=)\((.*?)\)/\1(\2 encrypt lvm2)/g' /etc/mkinitcpio.conf
+sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck)/g' /etc/mkinitcpio.conf
 
 checkline "cat /etc/mkinitcpio.conf"
 
