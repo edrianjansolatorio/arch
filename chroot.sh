@@ -8,12 +8,6 @@ exit 0
 fi
 }
 
-checkline "cat /etc/locale.gen"
-checkline "ls /etc/localtime"
-checkline "cat /etc/hosts"
-checkline "cat /etc/sudoers"
-checkline "cat /etc/pacman.conf"
-
 source ./settings.conf
 
 locale-gen
