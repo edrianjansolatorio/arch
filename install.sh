@@ -151,6 +151,8 @@ $HOST_NAME
 127.0.0.1 $HOST_NAME.localdomain $HOST_NAME
 " > /mnt/etc/hosts
 
+echo "${HOST_NAME}" > /mnt/etc/hostname
+
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
 echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
 

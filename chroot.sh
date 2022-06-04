@@ -11,6 +11,8 @@ fi
 source ./settings.conf
 
 locale-gen
+locale > /etc/locale.conf
+
 hwclock --systohc --utc
 
 echo -n "${PASSWORD}" | passwd
