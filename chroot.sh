@@ -81,9 +81,9 @@ systemctl enable bluetooth
 STORAGE_NAME=shingha
 VOLGROUP=scrubs
 
-sed 's/HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)"/HOOKS="(base udev autodetect modconf block filesystems keyboard fsck encrypt lvm2)"/g' /etc/mkinitpcio.conf
+sed 's/HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)/HOOKS=(base udev autodetect modconf block filesystems keyboard fsck encrypt lvm2)/g' /etc/mkinitpcio.conf
 
-checkline "cat /etc/mkinitcpio.conf | less"
+checkline "cat /etc/mkinitcpio.conf"
 
 mkinitcpio -p linux
 bootctl --path=/boot/ install
@@ -96,7 +96,7 @@ timeout 3
 editor 0
 " > /etc/loader/loader.conf
 
-checkline "cat /etc/loader/loader.conf | less"
+checkline "cat /etc/loader/loader.conf"
 
 # blkid /dev/${DISK}${DISK_PREFIX}2
 

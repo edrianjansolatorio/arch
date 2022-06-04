@@ -75,8 +75,8 @@ sgdisk -A 1:set:2 ${DISK}
 
 NEW_DISK=${DISK}${DISK_PREFIX}
 
-echo "Y" | mkfs.ext2 ${NEW_DISK}1
-echo "Y" | mkfs.ext4 ${NEW_DISK}3
+echo -n "y" | mkfs.ext2 ${NEW_DISK}1
+echo -n "y" | mkfs.ext4 ${NEW_DISK}3
 mkswap ${NEW_DISK}2
 
 mount ${NEW_DISK}3 /mnt
