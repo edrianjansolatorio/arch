@@ -87,7 +87,7 @@ reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorli
 fi
 # -- debugging -- #
 
-pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring git
+pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring
 pacstrap -i /mnt --needed --noconfirm grub
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
@@ -99,27 +99,24 @@ genfstab -p /mnt >> /mnt/etc/fstab
 
 cat /mnt/etc/fstab
 
-# ----------------- KDE ------------------ #
+# TEST [start] #
 
-# @@@ #
-# pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
-# @@@ #
+echo "[Unit]
+Description=Set the battery charge threshold
+After=multi-user.target
+StartLimitBurst=0
 
-if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
+[Service]
+Type=oneshot
+Restart=on-failure
+ExecStart=/bin/bash -c 'echo 60 > /sys/class/power_supply/BAT1/charge_control_end_threshold'
 
-echo "kde desktop"
+[Install]
+WantedBy=multi-user.target" >> /mnt/etc/systemd/system/battery-charge-threshold.service
 
-### OPTION-1
+# TEST [start] #
 
-pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
-
-fi
-
-if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
-
-cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
-
-fi
+checkline "cat /mnt/etc/systemd/system/battery-charge-threshold.service"
 
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
 ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
@@ -143,6 +140,27 @@ echo "
 [g14]
 SigLevel = DatabaseNever Optional TrustAll
 Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
+
+# ----------------- KDE ------------------ #
+
+pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
+
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
+
+echo "kde desktop"
+
+### OPTION-1
+
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
+
+fi
+
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
+
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+
+fi
+
 
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt

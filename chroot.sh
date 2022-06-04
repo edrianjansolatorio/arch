@@ -66,11 +66,9 @@ fi
 
 # ----------- RUN SERVICES -------------- #
 
-# @@@ #
-# systemctl enable NetworkManager
-# systemctl enable dhcpcd
-# systemctl enable iwd.service
-# @@@ #
+systemctl enable NetworkManager
+systemctl enable dhcpcd
+systemctl enable iwd.service
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
 
@@ -117,11 +115,12 @@ cat /boot/loader/loader.conf
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
 
-# -MIGHT DELETE LATER [BEGIN]- #
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
 
+echo "install G14 kernel"
 pacman -Sy --noconfirm --needed linux-g14 linux-g14-headers
 
-# -MIGHT DELETE LATER [END]- #
+fi
 
 echo "
 title ${GRUB_TITLE}
