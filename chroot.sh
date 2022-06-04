@@ -121,6 +121,17 @@ DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/
 # options cryptdevice=UUID=${DISK_ID}:volume root=/dev/mapper/${USERNAME}-ROOT quiet rw
 # " > /boot/loader/entries/arch.conf
 
+# -MIGHT DELETE LATER [BEGIN]- #
+
+echo "
+[g14]
+SigLevel = DatabaseNever Optional TrustAll
+Server = https://arch.asus-linux.org" >> /etc/pacman.conf
+
+pacman -Sy --noconfirm --needed linux-g14 linux-g14-headers
+
+# -[MIGHT DELETE LATER [END]- #
+
 echo "
 title ${GRUB_TITLE}
 linux /vmlinuz-linux-g14
