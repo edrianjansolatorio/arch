@@ -5,3 +5,5 @@ beekeeper-studio-bin
 wps-office
 slack-desktop
 gitahead
+
+HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)
