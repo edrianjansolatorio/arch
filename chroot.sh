@@ -80,12 +80,6 @@ fi
 
 # ---------------- GPU ------------------- #
 
-if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
-
-echo "install G14 kernel"
-pacman -Sy --noconfirm --needed linux-g14 linux-g14-headers
-
-fi
 
 # ---------- RUN SERVICES ------------ #
 
@@ -111,6 +105,12 @@ cat /boot/loader/loader.conf
 
 DISK_ID=$(blkid /dev/nvme0n1p2 | awk '{print $2}' | sed -r -e 's/(UUID=")(.*?)"/\2/g')
 
+if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
+
+echo "install G14 kernel"
+pacman -Sy --noconfirm --needed linux-g14 linux-g14-headers
+
+fi
 
 echo "
 title ${GRUB_TITLE}
