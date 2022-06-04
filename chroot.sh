@@ -2,7 +2,7 @@
 
 checkline() {
 $1
-read -p "continue?" confirmation
+read -p "continue?: " confirmation
 if [[ "$confirmation" != "y" ]]; then
 exit 0
 fi
@@ -84,6 +84,8 @@ if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$GPU_TYPE" == "NVIDIA" ]; then
 echo "nvidia"
 
 pacman -Sy --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+checkline ""
+
 fi
 
 # ---------------- GPU ------------------- #
