@@ -101,7 +101,9 @@ cat /mnt/etc/fstab
 
 # ----------------- KDE ------------------ #
 
-pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
+# @@@ #
+# pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
+# @@@ #
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
 
