@@ -97,14 +97,8 @@ do
  index+=1
  disk+=($i)
 done
-
 echo -e ""
-
 read -p "CHOOSE DISK: " $disk_choose
-
-echo -e ""
-
-echo -e ""
 read -p "HOST_NAME: " host_name
 read -p "USERNAME: " user
 read -sp "PASSWORD: " pass
