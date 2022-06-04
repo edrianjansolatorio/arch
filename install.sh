@@ -166,4 +166,4 @@ arch-chroot /mnt /chroot.sh
 
 umount -R /mnt
 
-reboot
+# reboot
