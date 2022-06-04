@@ -1,11 +1,11 @@
 #!/bin/bash
 
 checkline() {
- $1
- read -p "continue?" confirmation
- if [[ "$confirmation" != "y" ]]; then
-  exit 0
- fi
+$1
+read -p "continue?" confirmation
+if [[ "$confirmation" != "y" ]]; then
+exit 0
+fi
 }
 
 source ./settings.conf
@@ -113,9 +113,9 @@ cat /boot/loader/entries/arch.conf
 # ---------- ENCRYPT SET-UP ---------- #
 
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
-    mkdir /mnt/boot
-    mount ${NEW_DISK}1 /boot
-    swapon ${NEW_DISK}2
-    grub-install --boot-directory=/boot ${DISK}
-    grub-mkconfig -o /boot/grub/grub.cfg
+mkdir /mnt/boot
+mount ${NEW_DISK}1 /boot
+swapon ${NEW_DISK}2
+grub-install --boot-directory=/boot ${DISK}
+grub-mkconfig -o /boot/grub/grub.cfg
 fi

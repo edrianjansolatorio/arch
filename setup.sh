@@ -1,30 +1,30 @@
 #!/bin/bash
 
 checkline() {
- $1
- read -p "continue?" confirmation
+$1
+read -p "continue?" confirmation
 if [[ "$confirmation" != "y" ]]; then
- exit 0
+exit 0
 fi
 }
 
 reset () {
- echo -e "
- DESKTOP=
- DISK=
- DISK_PREFIX=
- BOOT_TYPE=
- USERNAME=
- PASSWORD=
- GPU_TYPE=
- HOST_NAME=
- GRUB_TITLE=
- INSTALL_TYPE=
+echo -e "
+DESKTOP=
+DISK=
+DISK_PREFIX=
+BOOT_TYPE=
+USERNAME=
+PASSWORD=
+GPU_TYPE=
+HOST_NAME=
+GRUB_TITLE=
+INSTALL_TYPE=
 " > ./settings.conf
 }
 
 update_settings () {
- sed -i "s/$1=/$1=$2/g" ./settings.conf
+sed -i "s/$1=/$1=$2/g" ./settings.conf
 }
 
 reset
@@ -47,31 +47,31 @@ declare -i index=0
 # [BEGIN]-GET GPU #
 
 if grep -E "NVIDIA|GeForce" <<< $(lspci); then
- gpu=NVIDIA
- update_settings "GPU_TYPE" "$gpu"
+gpu=NVIDIA
+update_settings "GPU_TYPE" "$gpu"
 elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
- gpu=AMD
- update_settings "GPU_TYPE" "$gpu"
+gpu=AMD
+update_settings "GPU_TYPE" "$gpu"
 elif grep -E "Integrated Graphics Controller" <<< $(lspci); then
- gpu=INTEL_GRAPHICS
- update_settings "GPU_TYPE" "$gpu"
+gpu=INTEL_GRAPHICS
+update_settings "GPU_TYPE" "$gpu"
 elif grep -E "Intel Corporation UHD" <<< $(lspci); then
- gpu=INTEL_UHD
- update_settings "GPU_TYPE" "$gpu"
+gpu=INTEL_UHD
+update_settings "GPU_TYPE" "$gpu"
 else
- gpu=--
- update_settings "GPU_TYPE" "$gpu"
+gpu=--
+update_settings "GPU_TYPE" "$gpu"
 fi
 # [END]-GET GPU #
 
 # [BEGIN]-GET BOOT_TYPE #
 
 if [[ -d "/sys/firmware/efi" ]]; then
- boot=EFI
- update_settings "BOOT_TYPE" "$boot"
+boot=EFI
+update_settings "BOOT_TYPE" "$boot"
 else
- boot=LEGACY
- update_settings "BOOT_TYPE" "$boot"
+boot=LEGACY
+update_settings "BOOT_TYPE" "$boot"
 fi
 
 # [END]-GET BOOT_TYPE #
@@ -81,21 +81,21 @@ echo -e ""
 disk_list=$(lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print "/dev/"$2}')
 
 if [[ "$disk_list" == *"nvme0n1"* ]]; then
- update_settings "DISK_PREFIX" "p"
+update_settings "DISK_PREFIX" "p"
 fi
 
 for i in $disk_list
 do
- index+=1
- echo "$index. $i"
+index+=1
+echo "$index. $i"
 done
 
 disk_list=$(lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print "\\/dev\\/"$2}')
 
 for i in $disk_list
 do
- index+=1
- disk+=($i)
+index+=1
+disk+=($i)
 done
 echo -e ""
 read -p "CHOOSE DISK: " $disk_choose
@@ -113,22 +113,22 @@ read -p "INSTALL_TYPE: " select_install_type
 
 if [ "$select_install_type" == "1" ]; then
 
- install_type="BASIC-GUI"
- echo -e ""
+install_type="BASIC-GUI"
+echo -e ""
 
- index=0
+index=0
 
- for i in $desktop_list
- do
-  index+=1
-  echo "$index. $i"
- done
+for i in $desktop_list
+do
+index+=1
+echo "$index. $i"
+done
 
- echo -e ""
+echo -e ""
 
- echo "INSTALL_TYPE IS BASIC/GUI"
- read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
- desktop=${desktop_list[$desktop_environment - 1]}
+echo "INSTALL_TYPE IS BASIC/GUI"
+read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
+desktop=${desktop_list[$desktop_environment - 1]}
 
 fi
 
@@ -152,8 +152,8 @@ index=0
 
 for i in $desktop_list
 do
- index+=1
- echo "$index. ${i}"
+index+=1
+echo "$index. ${i}"
 done
 
 checkline "cat ./settings.conf"

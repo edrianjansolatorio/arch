@@ -1,11 +1,11 @@
 #!/bin/bash
 
 checkline() {
- $1
- read -p "continue?" confirmation
- if [[ "$confirmation" != "y" ]]; then
-  exit 0
- fi
+$1
+read -p "continue?" confirmation
+if [[ "$confirmation" != "y" ]]; then
+exit 0
+fi
 }
 
 ./setup.sh
@@ -17,26 +17,26 @@ timedatectl status
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
 
- umount -A --recursive /mnt
- swapoff -a
- wipefs --all --force ${DISK}
- sgdisk -Z ${DISK}
- sgdisk -a 2048 -o ${DISK}
+umount -A --recursive /mnt
+swapoff -a
+wipefs --all --force ${DISK}
+sgdisk -Z ${DISK}
+sgdisk -a 2048 -o ${DISK}
 
- sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' ${DISK} # EFI /dev/nvme0n1p1
- sgdisk -n 2::-0 --typecode=2:8e00 --change-name=2:'ROOT' ${DISK} # FILE SYSTEM /dev/nvme0n1p3
+sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' ${DISK} # EFI /dev/nvme0n1p1
+sgdisk -n 2::-0 --typecode=2:8e00 --change-name=2:'ROOT' ${DISK} # FILE SYSTEM /dev/nvme0n1p3
 
- NEW_DISK=${DISK}${DISK_PREFIX}
+NEW_DISK=${DISK}${DISK_PREFIX}
 
- mkfs.fat -F32 ${NEW_DISK}1
+mkfs.fat -F32 ${NEW_DISK}1
 
 # "shingha" <--- custom name
 
- echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${NEW_DISK}2 -
- echo -n "${PASSWORD}" | cryptsetup open --type luks ${NEW_DISK}2 ${HOST_NAME} -
+echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${NEW_DISK}2 -
+echo -n "${PASSWORD}" | cryptsetup open --type luks ${NEW_DISK}2 ${HOST_NAME} -
 
 if [[ ! "/dev/mapper/${HOST_NAME}" ]]; then
- exit 0
+exit 0
 fi
 
 pvcreate /dev/mapper/${HOST_NAME}
@@ -54,25 +54,25 @@ swapon /dev/mapper/${USERNAME}-SWAP
 
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
 
- umount -A --recursive /mnt
- swapoff -a
- wipefs --all --force ${DISK}
- sgdisk -Z ${DISK}
- sgdisk -a 2048 -o ${DISK}
+umount -A --recursive /mnt
+swapoff -a
+wipefs --all --force ${DISK}
+sgdisk -Z ${DISK}
+sgdisk -a 2048 -o ${DISK}
 
- sgdisk -n 1::+1M --typecode=1:ef02 --change-name=1:'BOOT' ${DISK} # BOOT /dev/nvme0n1p1
- sgdisk -n 2::+2g --typecode=2:8200 --change-name=2:'SWAP' ${DISK} # SWAP /dev/nvme0n1p2
- sgdisk -n 3::-0 --typecode=3:8300 --change-name=3:'ROOT' ${DISK} # FILE SYSTEM /dev/nvme0n1p3
+sgdisk -n 1::+1M --typecode=1:ef02 --change-name=1:'BOOT' ${DISK} # BOOT /dev/nvme0n1p1
+sgdisk -n 2::+2g --typecode=2:8200 --change-name=2:'SWAP' ${DISK} # SWAP /dev/nvme0n1p2
+sgdisk -n 3::-0 --typecode=3:8300 --change-name=3:'ROOT' ${DISK} # FILE SYSTEM /dev/nvme0n1p3
 
- sgdisk -A 1:set:2 ${DISK}
+sgdisk -A 1:set:2 ${DISK}
 
- NEW_DISK=${DISK}${DISK_PREFIX}
+NEW_DISK=${DISK}${DISK_PREFIX}
 
- echo -n "y" | mkfs.ext2 ${NEW_DISK}1
- echo -n "y" | mkfs.ext4 ${NEW_DISK}3
- mkswap ${NEW_DISK}2
+echo -n "y" | mkfs.ext2 ${NEW_DISK}1
+echo -n "y" | mkfs.ext4 ${NEW_DISK}3
+mkswap ${NEW_DISK}2
 
- mount ${NEW_DISK}3 /mnt
+mount ${NEW_DISK}3 /mnt
 
 fi
 
@@ -81,8 +81,8 @@ lsblk
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
 
- cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
- reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 fi
 # -- debugging -- #
@@ -91,7 +91,7 @@ pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archl
 pacstrap -i /mnt --needed --noconfirm grub
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
- pacstrap -i /mnt --needed --noconfirm efibootmgr
+pacstrap -i /mnt --needed --noconfirm efibootmgr
 fi
 
 # genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -105,27 +105,27 @@ pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dial
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$DESKTOP" == "KDE" ]; then
 
- echo "kde desktop"
+echo "kde desktop"
 
 ### OPTION-1
 
- pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
 
 fi
 
 # ---------------- GPU ------------------- #
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ] && [ "$GPU_TYPE" == "NVIDIA" ]; then
- echo "nvidia"
+echo "nvidia"
 
- pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
+pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
 fi
 
 # ---------------- GPU ------------------- #
 
 if [ "$INSTALL_TYPE" == "BASIC-GUI" ]; then
 
- cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
 
 fi
 
