@@ -103,14 +103,6 @@ read -p "CHOOSE DISK: " $disk_choose
 
 echo -e ""
 
-index=0
-
-for i in $desktop_list
-do
-    index+=1
-    echo "$index. $i"
-done
-
 echo -e ""
 read -p "HOST_NAME: " host_name
 read -p "USERNAME: " user
@@ -125,6 +117,14 @@ echo "
 read -p "INSTALL_TYPE: " install_type
 
 if [ "$install_type" == "1" ]; then
+
+index=0
+
+for i in $desktop_list
+do
+    index+=1
+    echo "$index. $i"
+done
 
 echo "INSTALL_TYPE IS BASIC/GUI"
 read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
