@@ -23,6 +23,8 @@ whereis sudo
 usermod -aG wheel,audio,video,optical,storage $USERNAME
 groups $USERNAME
 
+checkline ""
+
 # ---------------- DEBUG AREA ------------------ #
 
 # @@@ #
