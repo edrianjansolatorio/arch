@@ -30,33 +30,26 @@ NEW_DISK=${DISK}${DISK_PREFIX}
 
 mkfs.fat -F32 ${NEW_DISK}1
 
-# ------------- DEBUG: ENCRYPT SET-UP ------------------- #
-
 # "shingha" <--- custom name
 
-STORAGE_NAME=shingha
-VOLGROUP=scrubs
-
 echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${NEW_DISK}2 -
-echo -n "${PASSWORD}" | cryptsetup open --type luks ${NEW_DISK}2 ${STORAGE_NAME} -
+echo -n "${PASSWORD}" | cryptsetup open --type luks ${NEW_DISK}2 ${HOST_NAME} -
 
-if [[ ! "/dev/mapper/${STORAGE_NAME}" ]]; then
+if [[ ! "/dev/mapper/${HOST_NAME}" ]]; then
 	exit 0
 fi
 
-pvcreate /dev/mapper/${STORAGE_NAME}
-vgcreate ${VOLGROUP} /dev/mapper/${STORAGE_NAME}
-lvcreate -L2G ${VOLGROUP} -n SWAP
-lvcreate -l 100%FREE ${VOLGROUP} -n ROOT
+pvcreate /dev/mapper/${HOST_NAME}
+vgcreate ${USERNAME} /dev/mapper/${HOST_NAME}
+lvcreate -L2G ${USERNAME} -n SWAP
+lvcreate -l 100%FREE ${USERNAME} -n ROOT
 
-mkfs.ext4 /dev/mapper/${VOLGROUP}-ROOT
-mkswap /dev/mapper/${VOLGROUP}-SWAP
-mount /dev/mapper/${VOLGROUP}-ROOT /mnt
+mkfs.ext4 /dev/mapper/${USERNAME}-ROOT
+mkswap /dev/mapper/${USERNAME}-SWAP
+mount /dev/mapper/${USERNAME}-ROOT /mnt
 mkdir /mnt/boot
 mount ${NEW_DISK}1 /mnt/boot
-swapon /dev/mapper/${VOLGROUP}-SWAP
-
-# ------------- DEBUG: ENCRYPT SET-UP ------------------- #
+swapon /dev/mapper/${USERNAME}-SWAP
 
 
 elif [ "$BOOT_TYPE" == "LEGACY" ]; then
@@ -83,13 +76,10 @@ mount ${NEW_DISK}3 /mnt
 fi
 
 fdisk -l
-# checkline "lsblk"
 lsblk
 
-# @@@ #
-# cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-# reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-# @@@ #
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+reflector --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # -- debugging -- #
 
@@ -103,14 +93,11 @@ fi
 # genfstab -U -p /mnt >> /mnt/etc/fstab
 genfstab -p /mnt >> /mnt/etc/fstab
 
-# checkline "cat /mnt/etc/fstab"
 cat /mnt/etc/fstab
 
 # ----------------- KDE ------------------ #
 
-# @@@ #
-# pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
-# @@@ #
+pacstrap -i /mnt --needed --noconfirm networkmanager dhcpcd dhclient netctl dialog iwd
 
 if [ "$DESKTOP" == "KDE" ]; then
 
@@ -118,28 +105,21 @@ echo "kde desktop"
 
 ### OPTION-1
 
-# @@@ #
-# pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
-# @@@ #
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
 
 fi
 
 # ---------------- GPU ------------------- #
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
-
 echo "nvidia"
 
-# @@@ #
-# pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
-# @@@ #
+pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-dkms
 fi
 
 # ---------------- GPU ------------------- #
 
-# @@@ #
-# cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
-# @@@ #
+cp /etc/pacman.d/mirrorlist.bak /etc/pacman.d/mirrorlist
 
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
 ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
@@ -159,12 +139,10 @@ echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
 sed -i "s/#\[multilib]/[multilib]/" /mnt/etc/pacman.conf
 sed -i "$!N;s/\(\[multilib]\n\)#\(Include\)/\1\2/;P;D" /mnt/etc/pacman.conf
 
-# @@@ #
-# echo "
-# [g14]
-# SigLevel = DatabaseNever Optional TrustAll
-# Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
-# @@@ #
+echo "
+[g14]
+SigLevel = DatabaseNever Optional TrustAll
+Server = https://arch.asus-linux.org" >> /mnt/etc/pacman.conf
 
 cp ./chroot.sh /mnt
 cp ./apps.sh /mnt
@@ -172,9 +150,6 @@ cp ./settings.conf /mnt
 
 arch-chroot /mnt /chroot.sh
 
-# @@@ #
-# umount -R /mnt
+umount -R /mnt
 
-# reboot
-
-# @@@ #
+reboot

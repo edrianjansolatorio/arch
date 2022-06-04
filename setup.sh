@@ -15,6 +15,7 @@ USERNAME=
 PASSWORD=
 GPU_TYPE=
 HOST_NAME=
+GRUB_TITLE=
 " > ./settings.conf
 }
 
@@ -112,6 +113,7 @@ read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment
 read -p "HOST_NAME: " host_name
 read -p "USERNAME: " user
 read -sp "PASSWORD: " pass
+read -p "GRUB_TITLE: " grub_title
 
 choosed_disk=${disk[$disk_choose - 1]}
 desktop=${desktop_list[$desktop_environment - 1]}
@@ -123,6 +125,7 @@ update_settings "DESKTOP" "$desktop"
 update_settings "HOST_NAME" "$host_name"
 update_settings "USERNAME" "$username"
 update_settings "PASSWORD" "$password"
+update_settings "GRUB_TITLE" "$grub_title"
 
 index=0
 
