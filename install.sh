@@ -97,7 +97,7 @@ fi
 # -- debugging -- #
 
 pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring
-pacstrap -i /mnt --needed --noconfirm grub
+# pacstrap -i /mnt --needed --noconfirm grub
 
 if [ "$BOOT_TYPE" == "EFI" ]; then
 pacstrap -i /mnt --needed --noconfirm efibootmgr
