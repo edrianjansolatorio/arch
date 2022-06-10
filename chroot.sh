@@ -51,7 +51,7 @@ pacman -Sy --noconfirm --needed asusctl supergfxctl
 
 systemctl enable supergfxd
 systemctl enable power-profiles-daemon.service
-systemctl --user enable asus-notify.service
+systemctl enable asus-notify.service
 systemctl enable battery-charge-threshold.service
 
 fi
