@@ -50,7 +50,7 @@ fi
 
 pvcreate /dev/mapper/${HOST_NAME}
 vgcreate ${USERNAME} /dev/mapper/${HOST_NAME}
-lvcreate -L2G ${USERNAME} -n SWAP
+lvcreate -L8G ${USERNAME} -n SWAP
 lvcreate -l 100%FREE ${USERNAME} -n ROOT
 
 mkfs.ext4 /dev/mapper/${USERNAME}-ROOT
