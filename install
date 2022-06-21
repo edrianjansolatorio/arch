@@ -1,0 +1,46 @@
+source ./controller
+
+# CONSTANTS
+install_type_list=('DEBUG' 'BASIC' 'GUI')
+
+# ------------------------------------------------------------------- #
+#                           GET CONFIGURATION                         #
+# ------------------------------------------------------------------- #
+
+echo "
+0: debug
+1: basic
+2: gui
+"
+
+read -p "INSTALL_TYPE: " select_install_type && update_constant "INSTALL_TYPE" "${install_type_list[select_install_type]}"
+install_type="${install_type_list[select_install_type]}"
+
+source ./constants.conf
+
+get_system_variables
+
+[[ "$INSTALL_TYPE" == "DEBUG" ]] && load_default_contants
+[[ "$INSTALL_TYPE" != "DEBUG" ]] && get_users_variables
+[[ "$INSTALL_TYPE" != "DEBUG" ]] && get_desktop_variables
+
+# ------------------------------------------------------------------- #
+#                             INSTALLATION                            #
+# ------------------------------------------------------------------- #
+
+set_date
+disk_partition
+install_primary_setup
+# install_packages
+modify_config
+
+# ------------------------------------------------------------------- #
+#                           REDIRECT TO CHROOT                        #
+# ------------------------------------------------------------------- #
+
+cp ./controller /mnt
+cp ./chroot /mnt
+cp ./constants.conf /mnt
+arch-chroot /mnt /chroot
+
+exit 0

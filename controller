@@ -1,0 +1,279 @@
+# ------------------------------------------------------------------- #
+#                               CONSTANTS                             #
+# ------------------------------------------------------------------- #
+
+DESKTOP_LIST=('KDE')
+DISK_LIST=$(lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print "/dev/"$2}')
+
+# ------------------------------------------------------------------- #
+#                               DEBUGGER                              #
+# ------------------------------------------------------------------- #
+
+check_line() {
+$1
+read -p "continue?" confirmation
+if [[ "$confirmation" != "y" ]]; then
+exit 0
+fi
+}
+
+# ------------------------------------------------------------------- #
+#                             SET-UP CONSTANT                         #
+# ------------------------------------------------------------------- #
+
+update_constant () {
+if [[ -f "constants.conf" ]]; then
+past_value=$(cat constants.conf | grep "$1" | cut -d'=' -f2)
+[[ $(cat constants.conf | grep $1=) ]] && sed -i "s/$1=$past_value/$1=$2/g" constants.conf || echo "$1=$2" >> constants.conf
+else
+echo "$1=$2" >> constants.conf
+fi
+}
+
+get_system_variables () {
+# [BEGIN]-GET CPU TOTAL #
+proc_type=$(lscpu)
+if grep -E "GenuineIntel" <<< ${proc_type}; then
+echo "Installing Intel microcode"
+cpu_type="INTEL"
+elif grep -E "AuthenticAMD" <<< ${proc_type}; then
+echo "Installing AMD microcode"
+cpu_type="AMD"
+fi
+
+update_constant "CPU_TYPE" "$cpu_type"
+
+# [END]-GET CPU TOTAL #
+
+# [BEGIN]-GET GPU #
+if grep -E "NVIDIA|GeForce" <<< $(lspci); then
+gpu_type="NVIDIA"
+elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
+gpu_type="AMD"
+elif grep -E "Integrated Graphics Controller" <<< $(lspci); then
+gpu_type="INTEL_GRAPHICS"
+elif grep -E "Intel Corporation UHD" <<< $(lspci); then
+gpu_type="INTEL_UHD"
+else
+gpu_type="--"
+fi
+
+update_constant "GPU_TYPE" "$gpu_type"
+# [BEGIN]-GET GPU #
+
+# [BEGIN]-GET RAM TOTAL #
+total_ram=$(cat /proc/meminfo | grep MemTotal | awk '$1=="MemTotal:"{print $2}')
+update_constant "TOTAL_RAM" "${total_ram}"
+# [END]-GET RAM TOTAL #
+
+# [BEGIN]-GET BOOT_TYPE #
+if [[ -d "/sys/firmware/efi" ]]; then
+boot_type="EFI"
+else
+boot_type="LEGACY"
+fi
+
+update_constant "BOOT_TYPE" "$boot_type"
+# [END]-GET BOOT_TYPE #
+
+}
+
+get_users_variables () {
+
+# [BEGIN]-GET BOOT_TYPE #
+declare -a disk=()
+declare -i index=0
+
+echo ""
+for i in $DISK_LIST; do
+index+=1
+echo "$index. $i"
+disk+=($(echo $i | cut -d'/' -f3))
+done
+
+if [[ "$DISK_LIST" == *"nvme0n"* ]]; then
+update_constant "DISK_PREFIX" "p"
+fi
+echo ""
+read -p "CHOOSE DISK: " disk_choose && update_constant "DISK" "${disk[disk_choose-1]}"
+read -p "BOOT_TITLE: " boot_title && update_constant "BOOT_TITLE" "$boot_title"
+read -p "HOST_NAME: " host_name && update_constant "HOST_NAME" "$host_name"
+read -p "USERNAME: " username && update_constant "USERNAME" "$username"
+read -sp "PASSWORD: " password && update_constant "PASSWORD" "$password"
+
+# [END]-GET BOOT_TYPE #
+}
+
+get_desktop_variables () {
+
+echo ""
+echo ""
+for i in $DESKTOP_LIST; do
+index+=1
+echo "$index. $i"
+done
+echo ""
+
+read -p "CHOOSE DESKTOP ENVIRONMENT: " desktop_environment && update_constant "DESKTOP" "${DESKTOP_LIST[desktop_environment-1]}"
+}
+
+load_default_contants () {
+# [BEGIN]-GET BOOT_TYPE #
+declare -a disk=()
+declare -i index=0
+
+for i in $DISK_LIST; do
+index+=1
+disk+=($(echo $i | cut -d'/' -f3))
+done
+
+if [[ "$DISK_LIST" == *"nvme0n"* ]]; then
+update_constant "DISK_PREFIX" "p"
+fi
+
+update_constant "DESKTOP" "--"
+update_constant "DISK" "${disk[0]}"
+update_constant "HOST_NAME" "host_test"
+update_constant "USERNAME" "user_test"
+update_constant "PASSWORD" "12345"
+update_constant "BOOT_TITLE" "boot_test"
+}
+
+
+# ------------------------------------------------------------------- #
+#                             INSTALLATION                            #
+# ------------------------------------------------------------------- #
+
+[[ -d "./constants.conf" ]] && source ./constants.conf
+
+set_date () {
+timedatectl set-ntp true
+timedatectl status
+}
+
+STORAGE_NAME=shingha
+VOLGRP=scrubs
+
+disk_partition () {
+new_disk="/dev/${DISK}${DISK_PREFIX}"
+
+umount -A --recursive /mnt
+swapoff -a
+wipefs --all --force /dev/${DISK}
+sgdisk -Z /dev/${DISK}
+sgdisk -a 2048 -o /dev/${DISK}
+
+sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' /dev/${DISK} # EFI /dev/nvme0n1p1
+sgdisk -n 2::-0 --typecode=2:8e00 --change-name=2:'ROOT' /dev/${DISK} # FILE SYSTEM /dev/nvme0n1p3
+
+mkfs.fat -F32 ${new_disk}1
+
+echo -n "${PASSWORD}" | cryptsetup -y -v luksFormat ${new_disk}2 -
+echo -n "${PASSWORD}" | cryptsetup open --type luks ${new_disk}2 ${STORAGE_NAME} -
+
+if [[ ! "/dev/mapper/${STORAGE_NAME}" ]]; then
+exit 0
+fi
+
+pvcreate /dev/mapper/${STORAGE_NAME}
+vgcreate ${VOLGRP} /dev/mapper/${STORAGE_NAME}
+
+lvcreate -L2G ${VOLGRP} -n SWAP
+mkswap /dev/mapper/${VOLGRP}-SWAP
+swapon /dev/mapper/${VOLGRP}-SWAP
+
+lvcreate -l 100%FREE ${VOLGRP} -n ROOT
+mkfs.ext4 /dev/mapper/${VOLGRP}-ROOT
+mount /dev/mapper/${VOLGRP}-ROOT /mnt
+mkdir /mnt/boot
+mount ${new_disk}1 /mnt/boot
+}
+
+install_primary_setup () {
+pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring grub
+[[ "$BOOT_TYPE" == "EFI" ]] && pacstrap -i /mnt --needed --noconfirm efibootmgr
+pacstrap -i /mnt --needed --noconfirm lvm2
+genfstab -U -p /mnt >> /mnt/etc/fstab
+}
+
+install_packages () {
+if [ "$DESKTOP" == "KDE" ]; then
+echo "kde desktop"
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
+fi
+
+if [ "$GPU_TYPE" == "NVIDIA" ]; then
+pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia
+fi
+}
+
+modify_config () {
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
+ln -sf /mnt/usr/share/zoneinfo/Asia/Manila /mnt/etc/localtime
+
+echo "
+$HOST_NAME
+127.0.0.1 localhost
+::1       localhost
+127.0.0.1 $HOST_NAME.localdomain $HOST_NAME
+" > /mnt/etc/hosts
+
+echo "${HOST_NAME}" > /mnt/etc/hostname
+
+sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /mnt/etc/sudoers
+echo "$USERNAME ALL=(ALL) ALL" >> /mnt/etc/sudoers
+
+sed -i "s/#\[multilib]/[multilib]/" /mnt/etc/pacman.conf
+sed -i "$!N;s/\(\[multilib]\n\)#\(Include\)/\1\2/;P;D" /mnt/etc/pacman.conf
+
+sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)/g' /mnt/etc/mkinitcpio.conf
+}
+
+set_timezone () {
+locale-gen
+locale > /etc/locale.conf
+hwclock --systohc --utc
+}
+
+set_user () {
+clear
+echo "$USERNAME $PASSWORD"
+read -p "TARGET"
+echo "root:${PASSWORD}" | chpasswd
+useradd -m $USERNAME
+echo "$USERNAME:${PASSWORD}" | chpasswd
+
+whereis sudo
+usermod -aG wheel,audio,video,optical,storage $USERNAME
+groups $USERNAME
+}
+
+install_packages () {
+pacman -Syu --noconfirm --needed
+pacman -Sy --noconfirm --needed bzip2 p7zip unrar
+pacman -Sy --noconfirm --needed git
+pacman -Sy --noconfirm --needed firefox
+# pacman -Sy --noconfirm --needed gimp
+
+if [ "$DESKTOP" == "KDE" ]; then
+# important apps
+pacman -Sy --noconfirm kwrite ark dolphin kwallet konsole latte-dock
+
+# bluetooth
+pacman -Sy --noconfirm pulseaudio-alsa pulseaudio-bluetooth bluez-utils bluez
+
+# for vscode to access login
+pacman -Sy --noconfirm gnome-keyring libsecret
+
+# fix sound and wifi applet
+pacman -Sy --noconfirm plasma-pa plasma-nm
+fi
+}
+
+enable_service () {
+systemctl enable NetworkManager
+systemctl enable dhcpcd
+systemctl enable iwd.service
+[[ "$DESKTOP" == "KDE" ]] && systemctl enable sddm.service
+systemctl enable bluetooth
+}
