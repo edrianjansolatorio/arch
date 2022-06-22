@@ -131,7 +131,7 @@ if [[ "$DISK_LIST" == *"nvme0n"* ]]; then
 update_constant "DISK_PREFIX" "p"
 fi
 
-update_constant "DESKTOP" "--"
+update_constant "DESKTOP" "KDE"
 update_constant "DISK" "${disk[0]}"
 update_constant "HOST_NAME" "host_test"
 update_constant "USERNAME" "user_test"
@@ -196,10 +196,12 @@ pacstrap -i /mnt --needed --noconfirm lvm2
 genfstab -U -p /mnt >> /mnt/etc/fstab
 }
 
-install_packages () {
+install_packages_part_1 () {
+read -p "TARGET"
+pacstrap -i /mnt --needed --noconfirm iwd dhcpcd networkmanager
 if [ "$DESKTOP" == "KDE" ]; then
-echo "kde desktop"
-pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session sddm
+pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session
+pacstrap -i /mnt --needed --noconfirm sddm
 fi
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
@@ -236,9 +238,6 @@ hwclock --systohc --utc
 }
 
 set_user () {
-clear
-echo "$USERNAME $PASSWORD"
-read -p "TARGET"
 echo "root:${PASSWORD}" | chpasswd
 useradd -m $USERNAME
 echo "$USERNAME:${PASSWORD}" | chpasswd
@@ -248,25 +247,25 @@ usermod -aG wheel,audio,video,optical,storage $USERNAME
 groups $USERNAME
 }
 
-install_packages () {
+install_packages_part_2 () {
 pacman -Syu --noconfirm --needed
-pacman -Sy --noconfirm --needed bzip2 p7zip unrar
-pacman -Sy --noconfirm --needed git
-pacman -Sy --noconfirm --needed firefox
-# pacman -Sy --noconfirm --needed gimp
+pacstrap -i /mnt --noconfirm --needed bzip2 p7zip unrar
+pacstrap -i /mnt --noconfirm --needed git
+pacstrap -i /mnt --noconfirm --needed firefox
+# pacstrap -i /mnt --noconfirm --needed gimp
 
 if [ "$DESKTOP" == "KDE" ]; then
 # important apps
-pacman -Sy --noconfirm kwrite ark dolphin kwallet konsole latte-dock
+pacstrap -i /mnt --noconfirm kwrite ark dolphin kwallet konsole latte-dock
 
 # bluetooth
-pacman -Sy --noconfirm pulseaudio-alsa pulseaudio-bluetooth bluez-utils bluez
+pacstrap -i /mnt --noconfirm pulseaudio-alsa pulseaudio-bluetooth bluez-utils bluez
 
 # for vscode to access login
-pacman -Sy --noconfirm gnome-keyring libsecret
+pacstrap -i /mnt --noconfirm gnome-keyring libsecret
 
 # fix sound and wifi applet
-pacman -Sy --noconfirm plasma-pa plasma-nm
+pacstrap -i /mnt --noconfirm plasma-pa plasma-nm
 fi
 }
 
