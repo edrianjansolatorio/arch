@@ -16,13 +16,13 @@ echo "
 read -p "INSTALL_TYPE: " select_install_type && update_constant "INSTALL_TYPE" "${install_type_list[select_install_type]}"
 install_type="${install_type_list[select_install_type]}"
 
-source ./constants.conf
+[[ -d "constants.conf" ]] && source ./constants.conf
 
 get_system_variables
 
-[[ "$INSTALL_TYPE" == "DEBUG" ]] && load_default_contants
-[[ "$INSTALL_TYPE" != "DEBUG" ]] && get_users_variables
-[[ "$INSTALL_TYPE" != "DEBUG" ]] && get_desktop_variables
+[[ "$install_type" == "DEBUG" ]] && load_default_contants
+[[ "$install_type" != "DEBUG" ]] && get_users_variables
+[[ "$install_type" != "DEBUG" ]] && get_desktop_variables
 
 # ------------------------------------------------------------------- #
 #                             INSTALLATION                            #

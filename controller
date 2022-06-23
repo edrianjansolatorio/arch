@@ -24,7 +24,7 @@ fi
 update_constant () {
 if [[ -f "constants.conf" ]]; then
 past_value=$(cat constants.conf | grep "$1" | cut -d'=' -f2)
-[[ $(cat constants.conf | grep $1=) ]] && sed -i "s/$1=$past_value/$1=$2/g" constants.conf || echo "$1=$2" >> constants.conf
+[[ $( cat constants.conf | grep "$1=" ) ]] && sed -i "s/$1=$past_value/$1=$2/g" constants.conf || echo "$1=$2" >> constants.conf
 else
 echo "$1=$2" >> constants.conf
 fi
@@ -95,7 +95,7 @@ if [[ "$DISK_LIST" == *"nvme0n"* ]]; then
 update_constant "DISK_PREFIX" "p"
 fi
 echo ""
-read -p "CHOOSE DISK: " disk_choose && update_constant "DISK" "${disk[disk_choose-1]}"
+read -p "CHOOSE DISK_DRIVE: " disk_choose && update_constant "DISK_DRIVE" "${disk[disk_choose-1]}"
 read -p "BOOT_TITLE: " boot_title && update_constant "BOOT_TITLE" "$boot_title"
 read -p "HOST_NAME: " host_name && update_constant "HOST_NAME" "$host_name"
 read -p "USERNAME: " username && update_constant "USERNAME" "$username"
@@ -132,7 +132,7 @@ update_constant "DISK_PREFIX" "p"
 fi
 
 update_constant "DESKTOP" "KDE"
-update_constant "DISK" "${disk[0]}"
+update_constant "DISK_DRIVE" "${disk[0]}"
 update_constant "HOST_NAME" "host_test"
 update_constant "USERNAME" "user_test"
 update_constant "PASSWORD" "12345"
@@ -155,16 +155,16 @@ STORAGE_NAME=shingha
 VOLGRP=scrubs
 
 disk_partition () {
-new_disk="/dev/${DISK}${DISK_PREFIX}"
+new_disk="/dev/${DISK_DRIVE}${DISK_PREFIX}"
 
 umount -A --recursive /mnt
 swapoff -a
-wipefs --all --force /dev/${DISK}
-sgdisk -Z /dev/${DISK}
-sgdisk -a 2048 -o /dev/${DISK}
+wipefs --all --force /dev/${DISK_DRIVE}
+sgdisk -Z /dev/${DISK_DRIVE}
+sgdisk -a 2048 -o /dev/${DISK_DRIVE}
 
-sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' /dev/${DISK} # EFI /dev/nvme0n1p1
-sgdisk -n 2::-0 --typecode=2:8e00 --change-name=2:'ROOT' /dev/${DISK} # FILE SYSTEM /dev/nvme0n1p3
+sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' /dev/${DISK_DRIVE} # EFI /dev/nvme0n1p1
+sgdisk -n 2::-0 --typecode=2:8e00 --change-name=2:'ROOT' /dev/${DISK_DRIVE} # FILE SYSTEM /dev/nvme0n1p3
 
 mkfs.fat -F32 ${new_disk}1
 
@@ -197,7 +197,6 @@ genfstab -U -p /mnt >> /mnt/etc/fstab
 }
 
 install_packages_part_1 () {
-read -p "TARGET"
 pacstrap -i /mnt --needed --noconfirm iwd dhcpcd networkmanager
 if [ "$DESKTOP" == "KDE" ]; then
 pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session
