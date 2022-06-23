@@ -21,3 +21,11 @@ value="GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$disk_id:$STORAGE_NAME root=\/dev\/
 sed -i "s/$tag/$value/g" /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# ------------------------------------------------------------------- #
+#                           CLEANING FILES                            #
+# ------------------------------------------------------------------- #
+
+rm -rvf ./chroot
+rm -rvf ./controller
+rm -rvf ./constants.conf
