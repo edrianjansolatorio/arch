@@ -16,7 +16,7 @@ echo "
 read -p "INSTALL_TYPE: " select_install_type && update_constant "INSTALL_TYPE" "${install_type_list[select_install_type]}"
 install_type="${install_type_list[select_install_type]}"
 
-[[ -d "constants.conf" ]] && source ./constants.conf
+[[ -f "constants.conf" ]] && source ./constants.conf
 
 get_system_variables
 

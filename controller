@@ -144,7 +144,7 @@ update_constant "BOOT_TITLE" "boot_test"
 #                             INSTALLATION                            #
 # ------------------------------------------------------------------- #
 
-[[ -d "./constants.conf" ]] && source ./constants.conf
+[[ -f "./constants.conf" ]] && source ./constants.conf
 
 set_date () {
 timedatectl set-ntp true
@@ -163,7 +163,9 @@ wipefs --all --force /dev/${DISK_DRIVE}
 sgdisk -Z /dev/${DISK_DRIVE}
 sgdisk -a 2048 -o /dev/${DISK_DRIVE}
 
-sgdisk -n 1::+512M --typecode=1:ef00 --change-name=1:'EFI' /dev/${DISK_DRIVE} # EFI /dev/nvme0n1p1
+[[ "$BOOT_TYPE" == "EFI" ]] && disk_size="+300M" || [[ "$BOOT_TYPE" == "LEGACY" ]] && disk_size="+1M"
+
+sgdisk -n 1::$disk_size --typecode=1:ef00 --change-name=1:'BOOT' /dev/${DISK_DRIVE} # EFI /dev/nvme0n1p1
 sgdisk -n 2::-0 --typecode=2:8e00 --change-name=2:'ROOT' /dev/${DISK_DRIVE} # FILE SYSTEM /dev/nvme0n1p3
 
 mkfs.fat -F32 ${new_disk}1
@@ -187,6 +189,7 @@ mkfs.ext4 /dev/mapper/${VOLGRP}-ROOT
 mount /dev/mapper/${VOLGRP}-ROOT /mnt
 mkdir /mnt/boot
 mount ${new_disk}1 /mnt/boot
+
 }
 
 install_primary_setup () {
