@@ -1,5 +1,5 @@
-source /constants.conf
-source /controller
+[[ -f "constants.conf" ]] && source ./constants.conf || exit 0
+[[ -f "controller" ]] && source ./controller || exit 0
 
 set_timezone
 set_user
