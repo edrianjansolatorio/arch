@@ -9,18 +9,7 @@ enable_service
 #                           DEBUGGING GRUB                            #
 # ------------------------------------------------------------------- #
 
-mkinitcpio -p linux
-grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
-
-STORAGE_NAME="shingha"
-VOLGRP="scrubs"
-new_disk="/dev/${DISK_DRIVE}${DISK_PREFIX}2"
-disk_id=$(blkid | grep "${new_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
-tag="GRUB_CMDLINE_LINUX=\"\""
-value="GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$disk_id:$STORAGE_NAME root=\/dev\/mapper\/$VOLGRP-ROOT\""
-sed -i "s/$tag/$value/g" /etc/default/grub
-
-grub-mkconfig -o /boot/grub/grub.cfg
+grub_install
 
 # ------------------------------------------------------------------- #
 #                           CLEANING FILES                            #
