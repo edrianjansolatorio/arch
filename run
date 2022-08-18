@@ -1,0 +1,25 @@
+
+source ./controller
+[[ -f "constants.conf" ]] && source ./constants.conf
+
+# ------------------------------------------------------------------- #
+#                             INSTALLATION                            #
+# ------------------------------------------------------------------- #
+
+set_date
+disk_partition
+install_primary_setup
+install_packages_part_1
+# install_packages_part_2
+modify_config
+
+# ------------------------------------------------------------------- #
+#                           REDIRECT TO CHROOT                        #
+# ------------------------------------------------------------------- #
+
+cp ./controller /mnt
+cp ./chroot /mnt
+cp ./constants.conf /mnt
+arch-chroot /mnt /chroot
+
+exit 0
