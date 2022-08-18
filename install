@@ -24,24 +24,4 @@ get_system_variables
 [[ "$install_type" != "DEBUG" ]] && get_users_variables
 [[ "$install_type" != "DEBUG" ]] && get_desktop_variables
 
-# ------------------------------------------------------------------- #
-#                             INSTALLATION                            #
-# ------------------------------------------------------------------- #
-
-set_date
-disk_partition
-install_primary_setup
-install_packages_part_1
-# install_packages_part_2
-modify_config
-
-# ------------------------------------------------------------------- #
-#                           REDIRECT TO CHROOT                        #
-# ------------------------------------------------------------------- #
-
-cp ./controller /mnt
-cp ./chroot /mnt
-cp ./constants.conf /mnt
-arch-chroot /mnt /chroot
-
-exit 0
+./run
