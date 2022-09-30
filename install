@@ -11,6 +11,8 @@ echo "
 0: debug
 1: basic
 2: gui
+
+beta
 "
 
 read -p "INSTALL_TYPE: " select_install_type && update_constant "INSTALL_TYPE" "${install_type_list[select_install_type]}"
@@ -22,6 +24,6 @@ get_system_variables
 
 [[ "$install_type" == "DEBUG" ]] && load_default_contants
 [[ "$install_type" != "DEBUG" ]] && get_users_variables
-[[ "$install_type" != "DEBUG" ]] && get_desktop_variables
+[[ "$install_type" != "DEBUG" ]] && [[ "$install_type" != "BASIC" ]] && get_desktop_variables
 
 ./run
