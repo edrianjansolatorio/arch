@@ -1,0 +1,5 @@
+echo "$PASSWORD" | sudo -S modprobe zram
+echo "$PASSWORD" | sudo -S echo lz4 > /sys/block/zram0/comp_algorithm
+echo "$PASSWORD" | sudo -S echo 32G > /sys/block/zram0/disksize
+echo "$PASSWORD" | sudo -S mkswap --label zram0 /dev/zram0
+echo "$PASSWORD" | sudo -S swapon --priority 100 /dev/zram0
