@@ -1,5 +1,7 @@
 source ./controller
 
+clear_constant
+
 # CONSTANTS
 install_type_list=('DEBUG' 'BASIC' 'GUI')
 

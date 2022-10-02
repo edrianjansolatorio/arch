@@ -21,6 +21,10 @@ fi
 #                             SET-UP CONSTANT                         #
 # ------------------------------------------------------------------- #
 
+clear_constant () {
+rm -rvf constants.conf
+}
+
 update_constant () {
 if [[ -f "constants.conf" ]]; then
 past_value=$(cat constants.conf | grep "$1" | cut -d'=' -f2)
@@ -181,9 +185,11 @@ fi
 pvcreate /dev/mapper/${STORAGE_NAME}
 vgcreate ${VOLGRP} /dev/mapper/${STORAGE_NAME}
 
+if [[  $TOTAL_RAM -gt 8000000 ]]; then
 lvcreate -L2G ${VOLGRP} -n SWAP
 mkswap /dev/mapper/${VOLGRP}-SWAP
 swapon /dev/mapper/${VOLGRP}-SWAP
+fi
 
 lvcreate -l 100%FREE ${VOLGRP} -n ROOT
 mkfs.ext4 /dev/mapper/${VOLGRP}-ROOT
