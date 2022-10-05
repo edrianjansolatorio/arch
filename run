@@ -10,7 +10,7 @@ set_date
 disk_partition
 install_primary_setup
 install_packages_part_1
-# install_packages_part_2
+install_packages_part_2
 modify_config
 
 # ------------------------------------------------------------------- #

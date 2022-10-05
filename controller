@@ -2,7 +2,7 @@
 #                               CONSTANTS                             #
 # ------------------------------------------------------------------- #
 
-DESKTOP_LIST=('KDE')
+DESKTOP_LIST=('KDE' 'I3WM')
 DISK_LIST=$(lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print "/dev/"$2}')
 
 # ------------------------------------------------------------------- #
@@ -135,7 +135,7 @@ if [[ "$DISK_LIST" == *"nvme0n"* ]]; then
 update_constant "DISK_PREFIX" "p"
 fi
 
-update_constant "DESKTOP" "KDE"
+update_constant "DESKTOP" "${DESKTOP_LIST[1]}"
 update_constant "DISK_DRIVE" "${disk[0]}"
 update_constant "HOST_NAME" "host_test"
 update_constant "USERNAME" "user_test"
@@ -211,6 +211,8 @@ pacstrap -i /mnt --needed --noconfirm iwd dhcpcd networkmanager
 if [ "$DESKTOP" == "KDE" ]; then
 pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session
 pacstrap -i /mnt --needed --noconfirm sddm
+elif [ "$DESKTOP" == "I3WM" ]; then
+pacstrap -i /mnt --needed xorg i3 dmenu lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 fi
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
@@ -283,6 +285,7 @@ systemctl enable NetworkManager
 systemctl enable dhcpcd
 systemctl enable iwd.service
 [[ "$DESKTOP" == "KDE" ]] && systemctl enable sddm.service
+[[ "$DESKTOP" == "I3WM" ]] && systemctl enable lightdm.service
 systemctl enable bluetooth
 }
 
