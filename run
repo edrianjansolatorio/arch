@@ -7,11 +7,40 @@ source ./controller
 # ------------------------------------------------------------------- #
 
 set_date
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 disk_partition
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 install_primary_setup
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 install_packages_part_1
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 install_packages_part_2
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 modify_config
+
+# -- pause -- #
+post_review
+# -- pause -- #
 
 # ------------------------------------------------------------------- #
 #                           REDIRECT TO CHROOT                        #

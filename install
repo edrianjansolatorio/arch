@@ -20,12 +20,38 @@ beta
 read -p "INSTALL_TYPE: " select_install_type && update_constant "INSTALL_TYPE" "${install_type_list[select_install_type]}"
 install_type="${install_type_list[select_install_type]}"
 
+# -- pause -- #
+post_review
+# -- pause -- #
+
 [[ -f "constants.conf" ]] && source ./constants.conf
+
+# -- pause -- #
+post_review
+# -- pause -- #
 
 get_system_variables
 
+# -- pause -- #
+post_review
+# -- pause -- #
+
 [[ "$install_type" == "DEBUG" ]] && load_default_contants
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 [[ "$install_type" != "DEBUG" ]] && get_users_variables
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 [[ "$install_type" != "DEBUG" ]] && [[ "$install_type" != "BASIC" ]] && get_desktop_variables
+
+# -- pause -- #
+post_review
+# -- pause -- #
 
 ./run

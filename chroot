@@ -1,15 +1,37 @@
 [[ -f "constants.conf" ]] && source ./constants.conf || exit 0
 [[ -f "controller" ]] && source ./controller || exit 0
 
+# -- pause -- #
+post_review
+# -- pause -- #
+
 set_timezone
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 set_user
+
+# -- pause -- #
+post_review
+# -- pause -- #
+
 enable_service
+
+# -- pause -- #
+post_review
+# -- pause -- #
 
 # ------------------------------------------------------------------- #
 #                           DEBUGGING GRUB                            #
 # ------------------------------------------------------------------- #
 
 grub_install
+
+# -- pause -- #
+post_review
+# -- pause -- #
 
 # ------------------------------------------------------------------- #
 #                           CLEANING FILES                            #

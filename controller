@@ -9,11 +9,21 @@ DISK_LIST=$(lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print "/dev/"$2}
 #                               DEBUGGER                              #
 # ------------------------------------------------------------------- #
 
-check_line() {
+PAUSE=true
+
+check_line () {
 $1
 read -p "continue?" confirmation
 if [[ "$confirmation" != "y" ]]; then
 exit 0
+fi
+}
+
+post_review () {
+if [[ $PAUSE == true ]]; then
+read -p "Press any key to resume ..."
+elif
+read -t 2 -p "I am going to wait for 5 seconds only ..."
 fi
 }
 
