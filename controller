@@ -300,6 +300,8 @@ systemctl enable bluetooth
 }
 
 grub_install () {
+lsblk
+read -p "test"
 mkinitcpio -p linux
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
