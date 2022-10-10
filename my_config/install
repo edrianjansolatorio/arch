@@ -2,8 +2,57 @@
 #               ZRAM              #
 # ------------------------------- #
 
-echo "$PASSWORD" | sudo -S modprobe zram
-echo "$PASSWORD" | sudo -S echo lz4 > /sys/block/zram0/comp_algorithm
-echo "$PASSWORD" | sudo -S echo 32G > /sys/block/zram0/disksize
-echo "$PASSWORD" | sudo -S mkswap --label zram0 /dev/zram0
-echo "$PASSWORD" | sudo -S swapon --priority 100 /dev/zram0
+PASSWORD=12345
+
+# ZRAM
+echo "
+#!/bin/bash
+
+modprobe zram
+echo lz4 > /sys/block/zram0/comp_algorithm
+echo 4G > /sys/block/zram0/disksize
+mkswap --label zram0 /dev/zram0
+swapon --priority 100 /dev/zram0
+"  > /usr/local/bin/zram_start
+
+echo "
+swapoff /dev/zram0
+rmmod zram
+"  > /usr/local/bin/zram_stop
+
+
+echo "
+[Unit]
+Description=Configure zram swap device
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/zram_start
+ExecStop=/usr/local/bin/zram_stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+" > /etc/systemd/system/zram-swap.service
+
+# BATTERY THRESHOLD
+
+echo "echo 60 > /sys/class/power_supply/BAT1/charge_control_end_threshold" > /usr/local/bin/asus_battery_threshold
+
+echo "
+[Unit]
+Description=Set the battery charge threshold
+After=multi-user.target
+StartLimitBurst=0
+
+[Service]
+Type=oneshot
+Restart=on-failure
+ExecStart=/usr/local/bin/asus_battery_threshold
+
+[Install]
+WantedBy=multi-user.target" > /etc/systemd/system/battery-charge-threshold.service
+
+echo "$PASSWORD" | sudo -S systemctl enable --now zram-swap.service
+echo "$PASSWORD" | sudo -S systemctl enable --now battery-charge-threshold.service
