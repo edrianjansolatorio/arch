@@ -23,7 +23,7 @@ post_review () {
 if [[ $PAUSE == true ]]; then
 read -p "Press any key to resume ..."
 else
-read -t 2 -p $'\n'"I am going to wait for 2 seconds only ..."
+read -t 2 -p $'\n'"I am going to wait for 2 seconds only ..."$'\n'
 fi
 }
 
@@ -240,7 +240,7 @@ if [ "$DESKTOP" == "KDE" ]; then
 pacstrap -i /mnt --needed --noconfirm xorg plasma-desktop plasma-wayland-session
 pacstrap -i /mnt --needed --noconfirm sddm
 elif [ "$DESKTOP" == "I3WM" ]; then
-pacstrap -i /mnt --needed xorg i3 dmenu lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
+pacstrap -i /mnt --needed --noconfirm xorg i3 dmenu lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 fi
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
@@ -318,8 +318,6 @@ systemctl enable bluetooth
 }
 
 grub_install () {
-lsblk
-read -p "test"
 mkinitcpio -p linux
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
@@ -327,6 +325,10 @@ STORAGE_NAME="shingha"
 VOLGRP="scrubs"
 new_disk="/dev/${DISK_DRIVE}${DISK_PREFIX}2"
 disk_id=$(blkid | grep "${new_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
+
+echo $disk_id
+read -p "test"
+
 tag="GRUB_CMDLINE_LINUX=\"\""
 value="GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$disk_id:$STORAGE_NAME root=\/dev\/mapper\/$VOLGRP-ROOT\""
 sed -i "s/$tag/$value/g" /etc/default/grub
