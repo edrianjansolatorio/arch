@@ -23,7 +23,7 @@ post_review () {
 if [[ $PAUSE == true ]]; then
 read -p "Press any key to resume ..."
 else
-read -t 2 -p "I am going to wait for 2 seconds only ..."$'\n'
+read -t 2 -p $'\n'"I am going to wait for 2 seconds only ..."
 fi
 }
 
@@ -146,11 +146,29 @@ update_constant "DISK_PREFIX" "p"
 fi
 
 update_constant "DESKTOP" "${DESKTOP_LIST[1]}"
-update_constant "DISK_DRIVE" "${disk[1]}"
 update_constant "HOST_NAME" "host_test"
 update_constant "USERNAME" "user_test"
 update_constant "PASSWORD" "12345"
 update_constant "BOOT_TITLE" "boot_test"
+# update_constant "DISK_DRIVE" "${disk[0]}"
+
+# [BEGIN]-GET BOOT_TYPE #
+declare -a disk=()
+declare -i index=0
+
+echo ""
+for i in $DISK_LIST; do
+index+=1
+echo "$index. $i"
+disk+=($(echo $i | cut -d'/' -f3))
+done
+
+if [[ "$DISK_LIST" == *"nvme0n"* ]]; then
+update_constant "DISK_PREFIX" "p"
+fi
+echo ""
+read -p "CHOOSE DISK_DRIVE: " disk_choose && update_constant "DISK_DRIVE" "${disk[disk_choose-1]}"
+
 }
 
 
