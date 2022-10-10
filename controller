@@ -274,7 +274,7 @@ sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block keyboard en
 set_timezone () {
 locale-gen
 locale > /etc/locale.conf
-hwclock --systohc --utc
+hwclock --systohc
 }
 
 set_user () {
@@ -319,6 +319,11 @@ systemctl enable bluetooth
 }
 
 grub_install () {
+blkid
+cat /etc/fstab
+
+read -p "************ TEST ************** "
+
 mkinitcpio -p linux
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
@@ -326,10 +331,6 @@ STORAGE_NAME="shingha"
 VOLGRP="scrubs"
 new_disk="/dev/${DISK_DRIVE}${DISK_PREFIX}2"
 disk_id=$(blkid | grep "${new_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
-
-echo $disk_id
-read -p "test"
-
 tag="GRUB_CMDLINE_LINUX=\"\""
 value="GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$disk_id:$STORAGE_NAME root=\/dev\/mapper\/$VOLGRP-ROOT\""
 sed -i "s/$tag/$value/g" /etc/default/grub
