@@ -9,7 +9,7 @@ DISK_LIST=$(lsblk -n --output TYPE,KNAME,SIZE | awk '$1=="disk"{print "/dev/"$2}
 #                               DEBUGGER                              #
 # ------------------------------------------------------------------- #
 
-PAUSE=true
+PAUSE=false
 
 check_line () {
 $1
@@ -23,7 +23,7 @@ post_review () {
 if [[ $PAUSE == true ]]; then
 read -p "Press any key to resume ..."
 else
-read -t 2 -p "I am going to wait for 5 seconds only ..."
+read -t 2 -p "I am going to wait for 2 seconds only ..."$'\n'
 fi
 }
 
@@ -122,8 +122,8 @@ get_desktop_variables () {
 
 echo ""
 echo ""
-for i in $DESKTOP_LIST; do
-index+=1
+for i in "${DESKTOP_LIST[@]}"; do
+((index=index+1))
 echo "$index. $i"
 done
 echo ""
