@@ -319,11 +319,6 @@ systemctl enable bluetooth
 }
 
 grub_install () {
-blkid
-cat /etc/fstab
-
-read -p "************ TEST ************** "
-
 mkinitcpio -p linux
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
@@ -336,4 +331,11 @@ value="GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$disk_id:$STORAGE_NAME root=\/dev\/
 sed -i "s/$tag/$value/g" /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
+}
+
+# TODO: re-construct
+follow_up () {
+    boot_disk="/dev/${DISK_DRIVE}${DISK_PREFIX}1"
+    $disk_id=$(blkid | grep "${boot_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
+    sed -i "$!N;s/\(#\s*${boot_disk}\n\)\(UUID=\)\(\w*\W*\w*\)/\1\2${disk_id}/;P;D" /etc/fstab
 }
