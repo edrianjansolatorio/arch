@@ -319,7 +319,7 @@ systemctl enable bluetooth
 }
 
 grub_install () {
-mkinitcpio -p linux
+mkinitcpio -p linux-lts
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
 STORAGE_NAME="shingha"
@@ -336,6 +336,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # TODO: re-construct
 follow_up () {
     boot_disk="/dev/${DISK_DRIVE}${DISK_PREFIX}1"
-    $disk_id=$(blkid | grep "${boot_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
+    disk_id=$(blkid | grep "${boot_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
     sed -i "$!N;s/\(#\s*${boot_disk}\n\)\(UUID=\)\(\w*\W*\w*\)/\1\2${disk_id}/;P;D" /etc/fstab
 }
