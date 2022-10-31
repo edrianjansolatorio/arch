@@ -229,7 +229,7 @@ mount ${new_disk}1 /mnt/boot
 }
 
 install_primary_setup () {
-pacstrap -i /mnt --needed --noconfirm base base-devel linux-lts linux-lts-headers linux-firmware archlinux-keyring grub
+pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring grub
 [[ "$BOOT_TYPE" == "EFI" ]] && pacstrap -i /mnt --needed --noconfirm efibootmgr
 pacstrap -i /mnt --needed --noconfirm lvm2
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -245,7 +245,7 @@ pacstrap -i /mnt --needed --noconfirm xorg i3 dmenu lightdm lightdm-gtk-greeter 
 fi
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
-pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-lts
+pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia
 fi
 }
 
@@ -319,7 +319,7 @@ systemctl enable bluetooth
 }
 
 grub_install () {
-mkinitcpio -p linux-lts
+mkinitcpio -p linux
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
 STORAGE_NAME="shingha"
