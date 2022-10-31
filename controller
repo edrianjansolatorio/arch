@@ -229,7 +229,7 @@ mount ${new_disk}1 /mnt/boot
 }
 
 install_primary_setup () {
-pacstrap -i /mnt --needed --noconfirm base base-devel linux linux-firmware archlinux-keyring grub
+pacstrap -i /mnt --needed --noconfirm base base-devel linux-lts linux-lts-headers linux-firmware archlinux-keyring grub
 [[ "$BOOT_TYPE" == "EFI" ]] && pacstrap -i /mnt --needed --noconfirm efibootmgr
 pacstrap -i /mnt --needed --noconfirm lvm2
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -245,7 +245,7 @@ pacstrap -i /mnt --needed --noconfirm xorg i3 dmenu lightdm lightdm-gtk-greeter 
 fi
 
 if [ "$GPU_TYPE" == "NVIDIA" ]; then
-pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia
+pacstrap -i /mnt --needed --noconfirm cuda lib32-libvdpau lib32-nvidia-utils lib32-opencl-nvidia libvdpau libxnvctrl nvidia-settings nvidia-utils opencl-nvidia nvidia-lts
 fi
 }
 
@@ -301,11 +301,11 @@ pacstrap -i /mnt --noconfirm kwrite ark dolphin kwallet konsole latte-dock
 # bluetooth
 pacstrap -i /mnt --noconfirm pulseaudio-alsa pulseaudio-bluetooth bluez-utils bluez
 
-# for vscode to access login
-pacstrap -i /mnt --noconfirm gnome-keyring libsecret
-
 # fix sound and wifi applet
 pacstrap -i /mnt --noconfirm plasma-pa plasma-nm
+
+# for vscode to access login
+pacstrap -i /mnt --noconfirm gnome-keyring libsecret
 fi
 }
 
@@ -319,7 +319,7 @@ systemctl enable bluetooth
 }
 
 grub_install () {
-mkinitcpio -p linux
+mkinitcpio -p linux-lts
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
 
 STORAGE_NAME="shingha"
@@ -333,9 +333,27 @@ sed -i "s/$tag/$value/g" /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 }
 
+zram () {
+echo "
+[Unit]
+Description=zRam block devices swapping
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c "modprobe zram && echo lz4 > /sys/block/zram0/comp_algorithm && echo 4G > /sys/block/zram0/disksize && mkswap --label zram0 /dev/zram0 && swapon --priority 100 /dev/zram0"
+ExecStop=/usr/bin/bash -c "swapoff /dev/zram0 && rmmod zram"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+" > /etc/systemd/system/zram-swap.service
+
+systemctl enable zram-swap.service
+}
+
 # TODO: re-construct
 follow_up () {
-    boot_disk="\/dev\/${DISK_DRIVE}${DISK_PREFIX}1"
-    disk_id=$(blkid | grep "${boot_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
-    sed -i "$!N;s/\(#\s*${boot_disk}\n\)\(UUID=\)\(\w*\W*\w*\)/\1\2${disk_id}/;P;D" /etc/fstab
+boot_disk="\/dev\/${DISK_DRIVE}${DISK_PREFIX}1"
+disk_id=$(blkid | grep "${boot_disk}" | cut -d' ' -f2 | cut -d'=' -f2 | sed -e 's/"//g')
+sed -i "$!N;s/\(#\s*${boot_disk}\n\)\(UUID=\)\(\w*\W*\w*\)/\1\2${disk_id}/;P;D" /etc/fstab
 }
