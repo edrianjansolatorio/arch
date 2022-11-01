@@ -274,7 +274,7 @@ sed -r -i 's/(HOOKS=)\((.*?)\)/\1(base udev autodetect modconf block keyboard en
 set_timezone () {
 locale-gen
 locale > /etc/locale.conf
-hwclock --systohc
+# hwclock --systohc
 }
 
 set_user () {
